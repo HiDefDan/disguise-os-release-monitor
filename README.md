@@ -9,7 +9,7 @@ Disguise has no notification service for OS updates. This repo fills that gap.
 ## How it works
 
 - `.github/workflows/watch.yml` runs every 6 hours (at :17) and on demand.
-- `watch.mjs` (Node 20, no dependencies) fetches the page and extracts every
+- `watch.mjs` (Node 24, no dependencies) fetches the page and extracts every
   `cfpkg.disguise.one/pkg/os-image/<platform>/<version>/<file>.iso` link.
 - Every listed image is committed to `latest.json` as `{ "<platform>/<version>": "<filename>" }`.
   The filename includes the build hash, so silent re-releases are caught, including
@@ -50,3 +50,10 @@ re-enable it under **Actions → (workflow) → Enable workflow**.
 - **Failure path:** run the workflow with the `page_url` input set to a page with no ISO links
   (for example `https://example.com/`). The run should fail and nothing should be committed.
 - **Locally:** `node watch.mjs` (set `PAGE_URL` to test against another page).
+
+## Versioning
+
+Releases follow [Semantic Versioning](https://semver.org/) and are tagged `vX.Y.Z`. See
+[CHANGELOG.md](CHANGELOG.md) for what changed in each release. To release: move the
+`[Unreleased]` notes under a new version heading, update the compare links, commit, then
+`git tag -a vX.Y.Z -m "vX.Y.Z" && git push origin vX.Y.Z`.
