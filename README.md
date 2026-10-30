@@ -7,16 +7,19 @@ Disguise has no notification service for OS updates. This repo fills that gap.
 ## How it works
 
 - `.github/workflows/watch.yml` runs every 6 hours (at :17) and on demand.
-- `watch.mjs` (Node 20, no dependencies) fetches the page, extracts every
-  `cfpkg.disguise.one/pkg/os-image/<platform>/<version>/<file>.iso` link and picks the newest
-  image per platform. Quarter folders (`26Q1`, `24Q1_1`) rank above legacy numeric builds
-  (`199`, `215`). Ties are broken by filename.
-- The result is committed as `latest.json` (`{ "<platform>": "<filename>" }`). The filename
-  includes the build hash, so silent re-releases under the same quarter label are caught.
-- If any platform's filename changed, or a new platform appeared, an issue is opened listing
-  each change. The first run records a baseline and opens no issue.
+- `watch.mjs` (Node 20, no dependencies) fetches the page and extracts every
+  `cfpkg.disguise.one/pkg/os-image/<platform>/<version>/<file>.iso` link.
+- Every listed image is committed to `latest.json` as `{ "<platform>/<version>": "<filename>" }`.
+  The filename includes the build hash, so silent re-releases are caught, including
+  re-releases of older images that are no longer the newest for their platform.
+- An issue is opened when any image's filename changes (re-release), or a new version or
+  platform appears. Each entry shows the release or re-release date and reason from the page's
+  revision history (when the page gives one), and marks the newest image for each platform.
+  The first run records a baseline and opens no issue.
 - If the page can't be fetched or contains no ISO links, the run **fails** (red X, plus GitHub's
-  failed-workflow email), so a broken scraper never looks like "nothing new".
+  failed-workflow email), so a broken scraper never looks like "nothing new". Reading dates is
+  best effort: if the page wording changes, alerts still go out, just without the date.
+- Each run's log lists every image, its date as read from the page, and the newest per platform.
 
 Only that one page is requested. ISOs are never downloaded. Only the built-in `GITHUB_TOKEN`
 is used. No secrets are needed.
@@ -38,7 +41,7 @@ re-enable it under **Actions → (workflow) → Enable workflow**.
 ## Testing
 
 - **Change detection:** edit one filename in `latest.json`, commit, then run the workflow.
-  It should open exactly one issue for that platform and restore `latest.json`.
+  It should open exactly one issue listing that image (with its date) and restore `latest.json`.
 - **Failure path:** run the workflow with the `page_url` input set to a page with no ISO links
   (for example `https://example.com/`). The run should fail and nothing should be committed.
 - **Locally:** `node watch.mjs` (set `PAGE_URL` to test against another page).
