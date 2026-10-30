@@ -23,8 +23,12 @@ jobs:
             .replace(/[ \t]+/g, ' ').replace(/\n\s*\n+/g, '\n');
           const dateRe = /\b(\d{1,2}[\/\-. ](?:\d{1,2}|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[\/\-. ]\d{2,4}|\d{4}-\d{2}-\d{2}|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{1,2},? \d{4})\b/g;
           console.log('== all date-like strings:', [...new Set(text.match(dateRe) ?? [])]);
-          const i = text.indexOf('[ISO'), j = text.lastIndexOf('[ISO');
-          console.log('== page text around the ISO section ==');
-          console.log(text.slice(Math.max(0, i - 1500), j + 600));
+          const parts = text.split(/(?=\[ISO )/).slice(1);
+          for (const part of parts) {
+            const url = part.match(/\[ISO (\S+)\]/)[1].split('/').slice(-3).join('/');
+            const block = part.split(/Package\s{5,}/)[0];
+            const lines = block.split('\n').map(l => l.trim()).filter(l => /release|revis|re-?released|updated|replac|date/i.test(l) && l.length < 200);
+            console.log('### ' + url + '\n  ' + lines.join('\n  '));
+          }
           JS
           node probe.mjs
