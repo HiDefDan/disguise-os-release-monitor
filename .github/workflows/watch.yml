@@ -1,0 +1,39 @@
+name: disguise-os-watch
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      page_url:
+        description: 'Override page URL (testing only, leave blank)'
+        required: false
+        default: ''
+permissions:
+  contents: write
+  issues: write
+concurrency:
+  group: disguise-os-watch
+  cancel-in-progress: false
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node watch.mjs
+        env:
+          PAGE_URL: ${{ inputs.page_url }}
+      # Raise the issue before committing state: if issue creation fails, the state stays
+      # unchanged and the next run retries, rather than the alert being lost.
+      - name: Raise issue
+        if: hashFiles('changes.md') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue create --title "New Disguise OS image ($(date -u +%Y-%m-%d))" --body-file changes.md
+      - name: Commit state
+        run: |
+          git config user.name  "os-watch"
+          git config user.email "os-watch@users.noreply.github.com"
+          git add latest.json
+          git diff --cached --quiet || { git commit -m "Update latest OS images"; git push; }
