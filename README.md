@@ -4,6 +4,8 @@ Watches the [Disguise hardware OS images page](https://help.disguise.one/hardwar
 and opens a GitHub Issue when the latest OS image for any hardware platform changes.
 Disguise has no notification service for OS updates. This repo fills that gap.
 
+**[📋 Latest image for each platform → LATEST.md](LATEST.md)** (regenerated whenever the page changes)
+
 ## How it works
 
 - `.github/workflows/watch.yml` runs every 6 hours (at :17) and on demand.
@@ -19,6 +21,9 @@ Disguise has no notification service for OS updates. This repo fills that gap.
 - If the page can't be fetched or contains no ISO links, the run **fails** (red X, plus GitHub's
   failed-workflow email), so a broken scraper never looks like "nothing new". Reading dates is
   best effort: if the page wording changes, alerts still go out, just without the date.
+- `LATEST.md` is regenerated each run: the newest image per platform with release date, Windows
+  and Designer versions and a download link, plus a collapsible list of every image. It has no
+  timestamps, so it is only committed when something on the page changes.
 - Each run's log lists every image, its date as read from the page, and the newest per platform.
 
 Only that one page is requested. ISOs are never downloaded. Only the built-in `GITHUB_TOKEN`

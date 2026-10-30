@@ -35,5 +35,5 @@ jobs:
         run: |
           git config user.name  "os-watch"
           git config user.email "os-watch@users.noreply.github.com"
-          git add latest.json
+          git add latest.json LATEST.md
           git diff --cached --quiet || { git commit -m "Update latest OS images"; git push; }
