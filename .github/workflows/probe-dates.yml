@@ -1,0 +1,30 @@
+# Temporary one-off: look for release dates near the ISO links. Will be deleted.
+name: probe-dates
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: |
+          cat > probe.mjs <<'JS'
+          const html = await (await fetch('https://help.disguise.one/hardware/hardware-os-images')).text();
+          console.log('HTML length', html.length);
+          const times = [...html.matchAll(/<time[^>]*>[\s\S]*?<\/time>/g)].map(m => m[0]);
+          console.log('== <time> elements:', times.length ? times : 'none');
+          console.log('== meta/date attrs:', [...new Set(html.match(/(article:modified_time|datePublished|dateModified|lastUpdated|last updated)[^<]{0,120}/gi) ?? [])]);
+          const text = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ')
+            .replace(/<a[^>]*href="(https:\/\/cfpkg[^"]+\.iso)"[^>]*>/g, ' [ISO $1] ')
+            .replace(/<\/(tr|p|li|h\d|div)>/g, '\n').replace(/<td[^>]*>/g, ' | ')
+            .replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&')
+            .replace(/[ \t]+/g, ' ').replace(/\n\s*\n+/g, '\n');
+          const dateRe = /\b(\d{1,2}[\/\-. ](?:\d{1,2}|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[\/\-. ]\d{2,4}|\d{4}-\d{2}-\d{2}|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{1,2},? \d{4})\b/g;
+          console.log('== all date-like strings:', [...new Set(text.match(dateRe) ?? [])]);
+          const i = text.indexOf('[ISO'), j = text.lastIndexOf('[ISO');
+          console.log('== page text around the ISO section ==');
+          console.log(text.slice(Math.max(0, i - 1500), j + 600));
+          JS
+          node probe.mjs
