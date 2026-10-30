@@ -48,9 +48,11 @@ const res = await fetch(PAGE, { headers: { 'user-agent': 'disguise-os-release-mo
 if (!res.ok) { console.error(`Fetch failed: HTTP ${res.status} for ${PAGE}`); process.exit(1); }
 const html = await res.text();
 
-// Platform names come from the page's h2 section headings, e.g. "RX I / RX II OS".
-const headings = [...html.matchAll(/<h2[^>]*?id="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)]
-  .map(m => ({ index: m.index, id: m[1], name: toText(m[2]).join(' ').replace(/\s+OS$/, '') }));
+// Platform names come from the nearest section heading above each platform's first ISO,
+// e.g. "RX I / RX II OS" (h3 on the live page).
+const headings = [...html.matchAll(/<h([23])[^>]*?id="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g)]
+  .map(m => ({ index: m.index, id: m[2], name: toText(m[3]).join(' ').replace(/\s+OS$/, '') }))
+  .filter(x => !/^(Revision History|Release Notes|Getting OS Images)$/i.test(x.name));
 const sections = {};
 
 // Each ISO's block of page text runs from its link to the next ISO link.
