@@ -17,7 +17,7 @@ if (!res.ok) { console.error(`Fetch failed: HTTP ${res.status} for ${PAGE}`); pr
 const html = await res.text();
 const urls = [...new Set(html.match(/https:\/\/cfpkg\.disguise\.one\/pkg\/os-image\/[^"'\s)<>]+\.iso/g) ?? [])];
 if (!urls.length) { console.error('No ISOs found, page layout may have changed'); process.exit(1); }
-console.log(`Found ${urls.length} ISO links`);
+console.log(`Found ${urls.length} ISO links:\n${urls.sort().join('\n')}`);
 
 const best = {};
 for (const u of urls) {
