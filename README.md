@@ -57,3 +57,9 @@ Releases follow [Semantic Versioning](https://semver.org/) and are tagged `vX.Y.
 [CHANGELOG.md](CHANGELOG.md) for what changed in each release. To release: move the
 `[Unreleased]` notes under a new version heading, update the compare links, commit, then
 `git tag -a vX.Y.Z -m "vX.Y.Z" && git push origin vX.Y.Z`.
+
+Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/):
+`type(scope): summary`, for example `feat: track every listed image` or `fix(latest): read h3 headings`.
+`feat` means a minor release, `fix` a patch, and `!` after the type (or a `BREAKING CHANGE:` footer)
+a major one. `docs`, `ci`, `chore` and `refactor` need no release on their own. The workflows'
+own commits are `chore(data): update latest OS images` and `chore(keepalive): monthly activity commit`.

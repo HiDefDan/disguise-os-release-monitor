@@ -17,5 +17,5 @@ jobs:
           git config user.name  "os-watch"
           git config user.email "os-watch@users.noreply.github.com"
           git add .keepalive
-          git commit -m "Keepalive"
+          git commit -m "chore(keepalive): monthly activity commit"
           git push

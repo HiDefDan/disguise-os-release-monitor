@@ -6,10 +6,13 @@ All notable changes to this project are documented here. The format is based on
 
 The public interface for versioning purposes is the format of `latest.json`, the content of
 alert issues, and `LATEST.md`. A change that breaks anything reading `latest.json` is a major
-version. Automated commits by the workflow (`Update latest OS images`, `Keepalive`) are data,
+version. Automated commits by the workflows (`chore(data): …`, `chore(keepalive): …`) are data,
 not releases, and are not versioned.
 
 ## [Unreleased]
+
+### Changed
+- Commit messages, including the workflows' automated commits, follow Conventional Commits.
 
 ## [2.1.1] - 2026-10-30
 
