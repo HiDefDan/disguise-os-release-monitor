@@ -124,7 +124,8 @@ const md = [
   '|:--|:--|:--|:--|:--|:--|',
   ...newest.map(img => {
     const when = img.date ? `${img.kind === 're-released' ? '🔁 ' : ''}${img.date}${img.reason ? `<br><sub>${cell(img.reason)}</sub>` : ''}` : '—';
-    const models = img.models && img.models.toLowerCase() !== name(img.platform).toLowerCase() ? `<br><sub>${cell(img.models)}</sub>` : '';
+    const norm = v => v.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const models = img.models && norm(img.models) !== norm(name(img.platform)) ? `<br><sub>${cell(img.models)}</sub>` : '';
     return `| **${link(img.platform)}**${models} | \`${cell(img.folder)}\` | ${when} | ${cell(img.windows) || '—'} | ${cell(img.designer) || '—'} | [⬇️ \`${cell(img.file)}\`](${img.url}) |`;
   }),
   '',
