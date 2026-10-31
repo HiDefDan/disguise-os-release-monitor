@@ -11,6 +11,8 @@ not releases, and are not versioned.
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-10-31
+
 ### Added
 - Cross-reference with the Disguise legacy products page. Each legacy product is matched to an
   OS platform by model name; `LATEST.md` marks fully (🟥) or partly (🟧) discontinued platforms
@@ -64,7 +66,8 @@ not releases, and are not versioned.
 - Monthly keepalive workflow so the schedule isn't disabled after 60 days of inactivity.
 - Optional `page_url` input for testing the failure path.
 
-[Unreleased]: https://github.com/HiDefDan/disguise-os-release-monitor/compare/v2.1.1...HEAD
+[Unreleased]: https://github.com/HiDefDan/disguise-os-release-monitor/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/HiDefDan/disguise-os-release-monitor/compare/v2.1.1...v2.2.0
 [2.1.1]: https://github.com/HiDefDan/disguise-os-release-monitor/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/HiDefDan/disguise-os-release-monitor/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/HiDefDan/disguise-os-release-monitor/compare/v1.0.0...v2.0.0
