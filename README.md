@@ -18,8 +18,17 @@ Disguise has no notification service for OS updates. This repo fills that gap.
   platform appears. Each entry shows the release or re-release date and reason from the page's
   revision history (when the page gives one), and marks the newest image for each platform.
   The first run records a baseline and opens no issue.
+- It also reads Disguise's [legacy products page](https://www.disguise.one/en/products/legacy-products)
+  and matches each legacy product to an OS platform by model name. `LATEST.md` marks platforms
+  whose models are all (🟥) or partly (🟧) discontinued, with the successor, and has a legacy
+  products table with each product's newest OS image. **Discontinued means no longer sold, not
+  that OS builds have stopped** (RX I / RX II got 26Q1 two years after RX II was discontinued),
+  so legacy platforms stay fully watched. Changes to the legacy list (a product added, removed
+  or re-dated) raise an issue too. The list is committed as `legacy.json`.
 - If the page can't be fetched or contains no ISO links, the run **fails** (red X, plus GitHub's
-  failed-workflow email), so a broken scraper never looks like "nothing new". Reading dates is
+  failed-workflow email), so a broken scraper never looks like "nothing new". If only the legacy products page fails, OS
+  alerts still go out and state is still committed, using the last known legacy list, and the
+  run is then marked failed. Reading dates is
   best effort: if the page wording changes, alerts still go out, just without the date.
 - `LATEST.md` is regenerated each run: the newest image per platform with release date, Windows
   and Designer versions and a download link, plus a collapsible list of every image. It has no

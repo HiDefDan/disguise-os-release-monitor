@@ -1,11 +1,14 @@
 // Checks the Disguise hardware OS images page and records every listed ISO.
 // latest.json maps "<platform>/<version-folder>" to the ISO filename (which contains the build
 // hash), so new versions and silent re-releases of any image are caught, not just the newest.
-// Writes changes.md only when something differs from the previously committed latest.json.
-// Exits non-zero if the page can't be read or has no ISOs.
+// Also reads the Disguise legacy products page (legacy.json) and cross-references it.
+// Writes changes.md and issue-title.txt only when something differs from the committed state.
+// Exits non-zero if the OS page can't be read or has no ISOs.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 
 const PAGE = process.env.PAGE_URL || 'https://help.disguise.one/hardware/hardware-os-images';
+const LEGACY_PAGE = process.env.LEGACY_URL || 'https://www.disguise.one/en/products/legacy-products';
+const UA = { 'user-agent': 'disguise-os-release-monitor (GitHub Actions)' };
 const ISO_RE = /https:\/\/cfpkg\.disguise\.one\/pkg\/os-image\/[^"'\s)<>]+\.iso/g;
 
 // Quarter folders (24Q1, 24Q1_1) rank above legacy numeric builds (199, 215).
@@ -44,7 +47,22 @@ const releaseInfo = (lines, file) => {
   return d;
 };
 
-const res = await fetch(PAGE, { headers: { 'user-agent': 'disguise-os-release-monitor (GitHub Actions)' } });
+// Legacy products page: each product has a name line, a description, "Date discontinued: …"
+// (sometimes inline in the description) and usually "Current Generation: …".
+const parseLegacy = h => {
+  const lines = toText(h.replace(/<\/(a|span)>/gi, '</p>'));
+  const out = {}; let name = null, last = null;
+  for (const l of lines.slice(lines.findIndex(x => /^See all our legacy products/i.test(x)) + 1)) {
+    if (l === 'Footer') break;
+    const d = l.match(/Date discontinued\s*:\s*(.+)$/i), g = l.match(/^Current Generation\s*:\s*(.+)$/i);
+    if (d && name) { out[last = name] = { discontinued: d[1].trim(), successor: '' }; name = null; }
+    else if (g && last) out[last].successor = g[1].trim();
+    else if (!d && !g && l.length <= 30 && !/^View spec/i.test(l)) name = l;
+  }
+  return out;
+};
+
+const res = await fetch(PAGE, { headers: UA });
 if (!res.ok) { console.error(`Fetch failed: HTTP ${res.status} for ${PAGE}`); process.exit(1); }
 const html = await res.text();
 
@@ -71,6 +89,7 @@ hits.forEach((h, n) => {
   if (cur && (cur.file > file || (cur.file === file && (cur.info || !d.info)))) return;
   images[key] = { ...d, platform, folder, file, url: u, r: rank(folder) };
 });
+const name = pl => sections[pl]?.name || pl;
 for (const [key, img] of Object.entries(images)) {
   const cur = best[img.platform];
   if (!cur || cmp(img.r, images[cur].r) > 0 || (cmp(img.r, images[cur].r) === 0 && img.file > images[cur].file)) best[img.platform] = key;
@@ -80,33 +99,83 @@ console.log(`Found ${keys.length} images on ${Object.keys(best).length} platform
 for (const [k, sec] of Object.entries(sections)) console.log(`Platform ${k}: ${sec ? `"${sec.name}" (#${sec.id})` : '(no heading found)'}`);
 for (const k of keys) console.log(`${best[images[k].platform] === k ? '*' : ' '} ${k.padEnd(26)} ${images[k].file.padEnd(36)} ${images[k].info || '(no date found)'}`);
 
+// "Discontinued" means no longer sold, not that OS builds have stopped, so legacy platforms
+// stay fully watched. A legacy page failure never blocks OS alerts: the last known list is kept
+// and legacy-error.txt makes the workflow fail afterwards, so the problem is still visible.
+const knownLegacy = existsSync('legacy.json') ? JSON.parse(readFileSync('legacy.json', 'utf8')) : null;
+let legacy = null, legacyError = '';
+try {
+  const r = await fetch(LEGACY_PAGE, { headers: UA });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  legacy = parseLegacy(await r.text());
+  if (!Object.keys(legacy).length) throw new Error('no products found, page layout may have changed');
+} catch (e) {
+  legacyError = `Legacy products page: ${e.message} (${LEGACY_PAGE}). Kept the last known list.`;
+  legacy = knownLegacy;
+  console.error(legacyError);
+}
+
+// Match legacy products to OS platforms by model name ("RX II" ~ "RX-II", but not "RX III").
+const modelKey = v => v.toLowerCase().replace(/[\s_-]+/g, '');
+const legacyOf = {}, platformOf = {};
+for (const pl of Object.keys(best)) {
+  const models = [...new Set((images[best[pl]].models || name(pl)).split('/').map(modelKey).filter(Boolean))];
+  const products = Object.keys(legacy ?? {}).filter(p => models.includes(modelKey(p)));
+  products.forEach(p => platformOf[p] = pl);
+  if (products.length) legacyOf[pl] = { products, all: products.length === models.length };
+}
+console.log(`Legacy products (${Object.keys(legacy ?? {}).length}):`);
+for (const [p, v] of Object.entries(legacy ?? {})) console.log(`  ${p.padEnd(22)} discontinued ${v.discontinued}${v.successor ? `, current generation ${v.successor}` : ''} -> ${platformOf[p] ? name(platformOf[p]) : '(no OS image section)'}`);
+
 let known = existsSync('latest.json') ? JSON.parse(readFileSync('latest.json', 'utf8')) : null;
 if (known && !Object.keys(known).some(k => k.includes('/'))) {
   console.log('latest.json is in the old one-image-per-platform format, recording a new baseline');
   known = null;
 }
+let osLines = [];
 if (!known) console.log('No previous state, recording baseline');
 else {
   const line = k => {
     const { platform, file, info } = images[k];
     const what = !(k in known) ? (Object.keys(known).some(x => x.startsWith(platform + '/')) ? 'new image' : 'new platform')
       : `replaces \`${known[k]}\``;
-    return `- **${k}**${best[platform] === k ? ' (newest for platform)' : ''}: \`${file}\` - ${what}${info ? `\n  - ${info}` : ''}`;
+    const tags = [best[platform] === k && 'newest for platform', legacyOf[platform] && (legacyOf[platform].all ? 'discontinued platform' : 'partly discontinued platform')].filter(Boolean);
+    return `- **${k}**${tags.length ? ` (${tags.join(', ')})` : ''}: \`${file}\` - ${what}${info ? `\n  - ${info}` : ''}`;
   };
   const changed = keys.filter(k => known[k] !== images[k].file).sort((a, b) => (best[images[b].platform] === b) - (best[images[a].platform] === a));
   const gone = Object.keys(known).filter(k => !(k in images));
   if (gone.length) console.log('No longer listed:', gone.join(', '));
-  if (changed.length) {
-    writeFileSync('changes.md', changed.map(line).join('\n') + `\n\n${PAGE}\n`);
-    console.log(`${changed.length} change(s):\n${changed.map(line).join('\n')}`);
-  } else console.log('No changes');
+  osLines = changed.map(line);
 }
+
+const legacyLines = [];
+const legacyDesc = v => `discontinued ${v.discontinued}${v.successor ? `, current generation ${v.successor}` : ''}`;
+if (!legacyError && !knownLegacy) console.log('No previous legacy list, recording baseline');
+else if (!legacyError) {
+  for (const [p, v] of Object.entries(legacy)) {
+    const o = knownLegacy[p];
+    if (!o) legacyLines.push(`- **${p}** added to the legacy list: ${legacyDesc(v)}${platformOf[p] ? ` (OS images: ${name(platformOf[p])})` : ''}`);
+    else if (o.discontinued !== v.discontinued || o.successor !== v.successor) legacyLines.push(`- **${p}**: ${legacyDesc(v)} (was ${legacyDesc(o)})`);
+  }
+  for (const p of Object.keys(knownLegacy)) if (!(p in legacy)) legacyLines.push(`- **${p}** removed from the legacy list`);
+}
+
+if (osLines.length || legacyLines.length) {
+  writeFileSync('changes.md', [
+    ...(osLines.length ? ['### OS images', '', ...osLines, '', PAGE, ''] : []),
+    ...(legacyLines.length ? ['### Legacy products', '', ...legacyLines, '', LEGACY_PAGE, ''] : []),
+  ].join('\n'));
+  const title = osLines.length ? `New Disguise OS image${legacyLines.length ? ' + legacy list change' : ''}` : 'Disguise legacy products list changed';
+  writeFileSync('issue-title.txt', `${title} (${new Date().toISOString().slice(0, 10)})`);
+  console.log(`Changes:\n${[...osLines, ...legacyLines].join('\n')}`);
+} else console.log('No changes');
 writeFileSync('latest.json', JSON.stringify(Object.fromEntries(keys.map(k => [k, images[k].file])), null, 1) + '\n');
+if (legacyError) writeFileSync('legacy-error.txt', legacyError + '\n');
+else writeFileSync('legacy.json', JSON.stringify(legacy, null, 1) + '\n');
 
 // LATEST.md: a rendered summary of the newest image per platform. No timestamps, so it only
 // changes (and gets committed) when the page does.
 const cell = v => (v || '').replace(/\|/g, '\\|');
-const name = pl => sections[pl]?.name || pl;
 const link = pl => sections[pl] ? `[${cell(name(pl))}](${PAGE}#${sections[pl].id})` : cell(pl);
 const byDate = (a, b) => (b.date ? dateValue(b.date) : 0) - (a.date ? dateValue(a.date) : 0) || name(a.platform).localeCompare(name(b.platform));
 const newest = Object.values(best).map(k => images[k]).sort(byDate);
@@ -126,11 +195,31 @@ const md = [
     const when = img.date ? `${img.kind === 're-released' ? '🔁 ' : ''}${img.date}${img.reason ? `<br><sub>${cell(img.reason)}</sub>` : ''}` : '—';
     const norm = v => v.toLowerCase().replace(/[^a-z0-9]/g, '');
     const models = img.models && norm(img.models) !== norm(name(img.platform)) ? `<br><sub>${cell(img.models)}</sub>` : '';
-    return `| **${link(img.platform)}**${models} | \`${cell(img.folder)}\` | ${when} | ${cell(img.windows) || '—'} | ${cell(img.designer) || '—'} | [⬇️ \`${cell(img.file)}\`](${img.url}) |`;
+    const l = legacyOf[img.platform], succ = l ? [...new Set(l.products.map(p => legacy[p].successor).filter(Boolean))] : [];
+    const status = l ? `<br><sub>${l.all ? '🟥 Discontinued' : '🟧 Partly discontinued'}: ${l.products.map(p => `${cell(p)} ${cell(legacy[p].discontinued)}`).join(', ')}${succ.length ? ` → ${cell(succ.join(' / '))}` : ''}</sub>` : '';
+    return `| **${link(img.platform)}**${models}${status} | \`${cell(img.folder)}\` | ${when} | ${cell(img.windows) || '—'} | ${cell(img.designer) || '—'} | [⬇️ \`${cell(img.file)}\`](${img.url}) |`;
   }),
   '',
-  '🔁 = re-released under the same version label with a new build hash. Delete older copies.',
+  '🔁 = re-released under the same version label with a new build hash. Delete older copies.<br>',
+  '🟥 / 🟧 = all / some of the platform\'s models are on Disguise\'s legacy products list (no longer sold).',
   '',
+  ...(legacy ? [
+    '## Legacy products',
+    '',
+    '> [!IMPORTANT]',
+    '> Discontinued means Disguise no longer sells the product. It does not mean OS builds have stopped:',
+    '> compare the discontinued date with the newest OS image.',
+    '',
+    '| Product | Discontinued | Current generation | OS images | Newest OS image |',
+    '|:--|:--|:--|:--|:--|',
+    ...Object.entries(legacy).map(([p, v]) => {
+      const img = platformOf[p] && images[best[platformOf[p]]];
+      return `| ${cell(p)} | ${cell(v.discontinued)} | ${cell(v.successor) || '—'} | ${img ? link(img.platform) : '—'} | ${img ? `\`${cell(img.folder)}\`${img.date ? ` · ${img.date}` : ''}` : '—'} |`;
+    }),
+    '',
+    `Source: [disguise.one legacy products](${LEGACY_PAGE})`,
+    '',
+  ] : []),
   '<details>',
   `<summary><b>All ${keys.length} listed images</b></summary>`,
   '',

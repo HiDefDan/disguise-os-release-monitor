@@ -11,6 +11,15 @@ not releases, and are not versioned.
 
 ## [Unreleased]
 
+### Added
+- Cross-reference with the Disguise legacy products page. Each legacy product is matched to an
+  OS platform by model name; `LATEST.md` marks fully (🟥) or partly (🟧) discontinued platforms
+  with their successor, and adds a legacy products table showing each product's newest OS image.
+- Alerts when the legacy products list changes (product added, removed or re-dated), recorded in
+  `legacy.json`. Issue titles say whether OS images, the legacy list, or both changed.
+- If only the legacy page fails, OS alerts and state still go through with the last known list,
+  and the run is then marked failed.
+
 ### Changed
 - Commit messages, including the workflows' automated commits, follow Conventional Commits.
 
