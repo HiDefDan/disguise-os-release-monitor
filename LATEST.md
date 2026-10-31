@@ -13,19 +13,48 @@
 | **[VX 3](https://help.disguise.one/hardware/hardware-os-images#vx-3-os)** | `25Q3` | 🔁 28/Jul/2026<br><sub>to support a new variant of the Deltacast capture card</sub> | Win 11 GAC 23H2 | r32.0 and above | [⬇️ `vx3_25Q3_5efe9a0b.iso`](https://cfpkg.disguise.one/pkg/os-image/vx3/25Q3/vx3_25Q3_5efe9a0b.iso) |
 | **[RX III](https://help.disguise.one/hardware/hardware-os-images#rx-iii-os)** | `26Q1` | 24/Jun/2026 | Win 11 GAC 23H2 | r32.0 and above | [⬇️ `RX3_26Q1_79dc6ea0.iso`](https://cfpkg.disguise.one/pkg/os-image/RX3/26Q1/RX3_26Q1_79dc6ea0.iso) |
 | **[VX 4+](https://help.disguise.one/hardware/hardware-os-images#vx-4-os)** | `25Q4` | 🔁 19/Jun/2026<br><sub>to resolve an occasional issue with Windows Activation</sub> | Win 11 GAC 23H2 | r32.0 and above | [⬇️ `vx4p_25Q4_481bc46b.iso`](https://cfpkg.disguise.one/pkg/os-image/vx4p/25Q4/vx4p_25Q4_481bc46b.iso) |
-| **[RX I / RX II](https://help.disguise.one/hardware/hardware-os-images#rx-i--rx-ii-os)**<br><sub>MX MOVE / RX / RX-II</sub> | `26Q1` | 05/Jun/2026 | Win 11 GAC 23H2 | r27.2 and above | [⬇️ `rx_26Q1_cd6d5082.iso`](https://cfpkg.disguise.one/pkg/os-image/rx/26Q1/rx_26Q1_cd6d5082.iso) |
+| **[RX I / RX II](https://help.disguise.one/hardware/hardware-os-images#rx-i--rx-ii-os)**<br><sub>MX MOVE / RX / RX-II</sub><br><sub>🟧 Partly discontinued: RX II May 2024, rx 2022 → RX III</sub> | `26Q1` | 05/Jun/2026 | Win 11 GAC 23H2 | r27.2 and above | [⬇️ `rx_26Q1_cd6d5082.iso`](https://cfpkg.disguise.one/pkg/os-image/rx/26Q1/rx_26Q1_cd6d5082.iso) |
 | **[GX 3](https://help.disguise.one/hardware/hardware-os-images#gx-3-os-1)** | `25Q2` | 🔁 11/Dec/2025<br><sub>to add better error handling in the case of a failed reimage</sub> | Win 11 GAC 23H2 | r28.0 and above | [⬇️ `gx3_25Q2_19f7e35d.iso`](https://cfpkg.disguise.one/pkg/os-image/gx3/25Q2/gx3_25Q2_19f7e35d.iso) |
 | **[VX 2+](https://help.disguise.one/hardware/hardware-os-images#vx-2-os)** | `25Q3` | 19/Nov/2025 | Win 11 GAC 23H2 | r32.0 and above | [⬇️ `vx2p_25Q3_ce7efeb9.iso`](https://cfpkg.disguise.one/pkg/os-image/vx2p/25Q3/vx2p_25Q3_ce7efeb9.iso) |
-| **[VX 1 / VX 2](https://help.disguise.one/hardware/hardware-os-images#vx-1--vx-2-os)** | `25Q1` | 14/Mar/2025 | Win 10 SAC 1809 | r27.2 | [⬇️ `vx12_25Q1_1955.iso`](https://cfpkg.disguise.one/pkg/os-image/vx12/25Q1/vx12_25Q1_1955.iso) |
-| **[EX 3](https://help.disguise.one/hardware/hardware-os-images#ex-3-os)** | `25Q1` | 18/Feb/2025 | Win 11 GAC 23H2 | r27.2 | [⬇️ `ex3_25Q1_1935.iso`](https://cfpkg.disguise.one/pkg/os-image/EX3/25Q1/ex3_25Q1_1935.iso) |
-| **[GX 2C](https://help.disguise.one/hardware/hardware-os-images#gx-2c-os)** | `24Q1` | 04/Mar/2024 | Win 10 SAC 1809 | r27.2 | [⬇️ `gx2cW10_24Q1_p1497.iso`](https://cfpkg.disguise.one/pkg/os-image/gx2c/24Q1/gx2cW10_24Q1_p1497.iso) |
-| **[VX 4](https://help.disguise.one/hardware/hardware-os-images#vx-4-os-1)** | `24Q1_1` | 04/Mar/2024 | Win 10 SAC 1809 | r27.2+ | [⬇️ `UNI_vx4W10_24Q1_1_p1496.iso`](https://cfpkg.disguise.one/pkg/os-image/vx4/24Q1_1/UNI_vx4W10_24Q1_1_p1496.iso) |
-| **[Solo](https://help.disguise.one/hardware/hardware-os-images#solo-os)** | `197` | 06/May/2022 | Win 10 LTSB 1607 | r14.4.7 to r29.2.2 | [⬇️ `SOLO_197_948.iso`](https://cfpkg.disguise.one/pkg/os-image/solo/197/SOLO_197_948.iso) |
-| **[4x4 / 4x2](https://help.disguise.one/hardware/hardware-os-images#4x4--4x2-os)**<br><sub>4x4 pro / 4x2 pro</sub> | `193` | 07/April/2022 | Win 8.1 | r18.1.10 | [⬇️ `PRO_d193_p934.iso`](https://cfpkg.disguise.one/pkg/os-image/pro/193/PRO_d193_p934.iso) |
-| **[GX 1 / GX 2 / 2x4pro](https://help.disguise.one/hardware/hardware-os-images#gx-1--gx-2--2x4pro-os)**<br><sub>2x4pro / GX 1 / GX 2</sub> | `11.0/180.841` | 01/Oct/2021 | Win 10 LTSB 1607 | r14.3+ | [⬇️ `PROW11_d180_p841.iso`](https://cfpkg.disguise.one/pkg/os-image/2xgx/11.0/180.841/PROW11_d180_p841.iso) |
-| **[2x2plus](https://help.disguise.one/hardware/hardware-os-images#2x2plus-os)** | `uni_usb4_01` | — | — | — | [⬇️ `USB_UNI4_01.iso`](https://cfpkg.disguise.one/pkg/os-image/plus/uni_usb4_01/USB_UNI4_01.iso) |
+| **[VX 1 / VX 2](https://help.disguise.one/hardware/hardware-os-images#vx-1--vx-2-os)**<br><sub>🟥 Discontinued: VX 1 October 2025, vx 2 January 2024 → VX 2+</sub> | `25Q1` | 14/Mar/2025 | Win 10 SAC 1809 | r27.2 | [⬇️ `vx12_25Q1_1955.iso`](https://cfpkg.disguise.one/pkg/os-image/vx12/25Q1/vx12_25Q1_1955.iso) |
+| **[EX 3](https://help.disguise.one/hardware/hardware-os-images#ex-3-os)**<br><sub>🟥 Discontinued: EX 3 August 2024 → EX-Range</sub> | `25Q1` | 18/Feb/2025 | Win 11 GAC 23H2 | r27.2 | [⬇️ `ex3_25Q1_1935.iso`](https://cfpkg.disguise.one/pkg/os-image/EX3/25Q1/ex3_25Q1_1935.iso) |
+| **[GX 2C](https://help.disguise.one/hardware/hardware-os-images#gx-2c-os)**<br><sub>🟥 Discontinued: gx 2c January 2024 → GX 3</sub> | `24Q1` | 04/Mar/2024 | Win 10 SAC 1809 | r27.2 | [⬇️ `gx2cW10_24Q1_p1497.iso`](https://cfpkg.disguise.one/pkg/os-image/gx2c/24Q1/gx2cW10_24Q1_p1497.iso) |
+| **[VX 4](https://help.disguise.one/hardware/hardware-os-images#vx-4-os-1)**<br><sub>🟥 Discontinued: vx 4 January 2024 → VX 4+</sub> | `24Q1_1` | 04/Mar/2024 | Win 10 SAC 1809 | r27.2+ | [⬇️ `UNI_vx4W10_24Q1_1_p1496.iso`](https://cfpkg.disguise.one/pkg/os-image/vx4/24Q1_1/UNI_vx4W10_24Q1_1_p1496.iso) |
+| **[Solo](https://help.disguise.one/hardware/hardware-os-images#solo-os)**<br><sub>🟥 Discontinued: solo November 2023</sub> | `197` | 06/May/2022 | Win 10 LTSB 1607 | r14.4.7 to r29.2.2 | [⬇️ `SOLO_197_948.iso`](https://cfpkg.disguise.one/pkg/os-image/solo/197/SOLO_197_948.iso) |
+| **[4x4 / 4x2](https://help.disguise.one/hardware/hardware-os-images#4x4--4x2-os)**<br><sub>4x4 pro / 4x2 pro</sub><br><sub>🟧 Partly discontinued: 4x4pro 17 June 2021 → VX 4+</sub> | `193` | 07/April/2022 | Win 8.1 | r18.1.10 | [⬇️ `PRO_d193_p934.iso`](https://cfpkg.disguise.one/pkg/os-image/pro/193/PRO_d193_p934.iso) |
+| **[GX 1 / GX 2 / 2x4pro](https://help.disguise.one/hardware/hardware-os-images#gx-1--gx-2--2x4pro-os)**<br><sub>2x4pro / GX 1 / GX 2</sub><br><sub>🟥 Discontinued: 2x4pro 18 March 2021, gx 1 18 March 2021, gx 2 18 March 2021 → VX 2+ / GX 3</sub> | `11.0/180.841` | 01/Oct/2021 | Win 10 LTSB 1607 | r14.3+ | [⬇️ `PROW11_d180_p841.iso`](https://cfpkg.disguise.one/pkg/os-image/2xgx/11.0/180.841/PROW11_d180_p841.iso) |
+| **[2x2plus](https://help.disguise.one/hardware/hardware-os-images#2x2plus-os)**<br><sub>🟥 Discontinued: 2x2plus 2021</sub> | `uni_usb4_01` | — | — | — | [⬇️ `USB_UNI4_01.iso`](https://cfpkg.disguise.one/pkg/os-image/plus/uni_usb4_01/USB_UNI4_01.iso) |
 
-🔁 = re-released under the same version label with a new build hash. Delete older copies.
+🔁 = re-released under the same version label with a new build hash. Delete older copies.<br>
+🟥 / 🟧 = all / some of the platform's models are on Disguise's legacy products list (no longer sold).
+
+## Legacy products
+
+> [!IMPORTANT]
+> Discontinued means Disguise no longer sells the product. It does not mean OS builds have stopped:
+> compare the discontinued date with the newest OS image.
+
+| Product | Discontinued | Current generation | OS images | Newest OS image |
+|:--|:--|:--|:--|:--|
+| VX 1 | October 2025 | — | [VX 1 / VX 2](https://help.disguise.one/hardware/hardware-os-images#vx-1--vx-2-os) | `25Q1` · 14/Mar/2025 |
+| PX | September 2025 | — | — | — |
+| PX+ | September 2025 | — | — | — |
+| EX 3 | August 2024 | EX-Range | [EX 3](https://help.disguise.one/hardware/hardware-os-images#ex-3-os) | `25Q1` · 18/Feb/2025 |
+| RX II | May 2024 | RX III | [RX I / RX II](https://help.disguise.one/hardware/hardware-os-images#rx-i--rx-ii-os) | `26Q1` · 05/Jun/2026 |
+| vx 2 | January 2024 | VX 2+ | [VX 1 / VX 2](https://help.disguise.one/hardware/hardware-os-images#vx-1--vx-2-os) | `25Q1` · 14/Mar/2025 |
+| vx 4 | January 2024 | VX 4+ | [VX 4](https://help.disguise.one/hardware/hardware-os-images#vx-4-os-1) | `24Q1_1` · 04/Mar/2024 |
+| gx 2c | January 2024 | GX 3 | [GX 2C](https://help.disguise.one/hardware/hardware-os-images#gx-2c-os) | `24Q1` · 04/Mar/2024 |
+| solo | November 2023 | — | [Solo](https://help.disguise.one/hardware/hardware-os-images#solo-os) | `197` · 06/May/2022 |
+| vx 4n | October 2023 | VX 4+ | — | — |
+| rx | 2022 | RX III | [RX I / RX II](https://help.disguise.one/hardware/hardware-os-images#rx-i--rx-ii-os) | `26Q1` · 05/Jun/2026 |
+| 4x4pro | 17 June 2021 | VX 4+ | [4x4 / 4x2](https://help.disguise.one/hardware/hardware-os-images#4x4--4x2-os) | `193` · 07/April/2022 |
+| 2x4pro | 18 March 2021 | VX 2+ | [GX 1 / GX 2 / 2x4pro](https://help.disguise.one/hardware/hardware-os-images#gx-1--gx-2--2x4pro-os) | `11.0/180.841` · 01/Oct/2021 |
+| gx 1 | 18 March 2021 | GX 3 | [GX 1 / GX 2 / 2x4pro](https://help.disguise.one/hardware/hardware-os-images#gx-1--gx-2--2x4pro-os) | `11.0/180.841` · 01/Oct/2021 |
+| gx 2 | 18 March 2021 | GX 3 | [GX 1 / GX 2 / 2x4pro](https://help.disguise.one/hardware/hardware-os-images#gx-1--gx-2--2x4pro-os) | `11.0/180.841` · 01/Oct/2021 |
+| 2x2plus | 2021 | — | [2x2plus](https://help.disguise.one/hardware/hardware-os-images#2x2plus-os) | `uni_usb4_01` |
+| OmniCal wireless kit | 25 October 2019 | OmniCal wired kit | — | — |
+
+Source: [disguise.one legacy products](https://www.disguise.one/en/products/legacy-products)
 
 <details>
 <summary><b>All 37 listed images</b></summary>

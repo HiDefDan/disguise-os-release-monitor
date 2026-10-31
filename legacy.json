@@ -1,0 +1,70 @@
+{
+ "VX 1": {
+  "discontinued": "October 2025",
+  "successor": ""
+ },
+ "PX": {
+  "discontinued": "September 2025",
+  "successor": ""
+ },
+ "PX+": {
+  "discontinued": "September 2025",
+  "successor": ""
+ },
+ "EX 3": {
+  "discontinued": "August 2024",
+  "successor": "EX-Range"
+ },
+ "RX II": {
+  "discontinued": "May 2024",
+  "successor": "RX III"
+ },
+ "vx 2": {
+  "discontinued": "January 2024",
+  "successor": "VX 2+"
+ },
+ "vx 4": {
+  "discontinued": "January 2024",
+  "successor": "VX 4+"
+ },
+ "gx 2c": {
+  "discontinued": "January 2024",
+  "successor": "GX 3"
+ },
+ "solo": {
+  "discontinued": "November 2023",
+  "successor": ""
+ },
+ "vx 4n": {
+  "discontinued": "October 2023",
+  "successor": "VX 4+"
+ },
+ "rx": {
+  "discontinued": "2022",
+  "successor": "RX III"
+ },
+ "4x4pro": {
+  "discontinued": "17 June 2021",
+  "successor": "VX 4+"
+ },
+ "2x4pro": {
+  "discontinued": "18 March 2021",
+  "successor": "VX 2+"
+ },
+ "gx 1": {
+  "discontinued": "18 March 2021",
+  "successor": "GX 3"
+ },
+ "gx 2": {
+  "discontinued": "18 March 2021",
+  "successor": "GX 3"
+ },
+ "2x2plus": {
+  "discontinued": "2021",
+  "successor": ""
+ },
+ "OmniCal wireless kit": {
+  "discontinued": "25 October 2019",
+  "successor": "OmniCal wired kit"
+ }
+}
