@@ -21,7 +21,8 @@ jobs:
           console.log('== script/json hints ==', (html.match(/__NEXT_DATA__|__NUXT__|application\/ld\+json|window\.__/g) ?? []).join(' '));
           const text = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ').replace(/<\/(p|li|div|h\d|a|span)>/g, '\n').replace(/<[^>]+>/g, ' ')
             .split('\n').map(l => l.replace(/\s+/g, ' ').trim()).filter(Boolean);
-          console.log('== visible text (first 250 lines) ==');
-          console.log(text.slice(0, 250).join('\n'));
+          const i = text.findIndex(l => l.startsWith('See all our legacy products'));
+          console.log('== legacy section (descriptions trimmed) ==');
+          console.log(text.slice(i, i + 260).filter(l => l !== '&nbsp;').map(l => l.length > 90 ? l.slice(0, 40) + ' … ' + l.slice(-45) : l).join('\n'));
           JS
           node probe.mjs
