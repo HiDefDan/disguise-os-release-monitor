@@ -11,6 +11,10 @@ not releases, and are not versioned.
 
 ## [Unreleased]
 
+### Added
+- README License section: MIT covers the code; the generated data comes from Disguise's
+  public pages and isn't covered. Adds a non-affiliation note.
+
 ## [2.2.0] - 2026-10-31
 
 ### Added

@@ -72,3 +72,16 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 `feat` means a minor release, `fix` a patch, and `!` after the type (or a `BREAKING CHANGE:` footer)
 a major one. `docs`, `ci`, `chore` and `refactor` need no release on their own. The workflows'
 own commits are `chore(data): update watched state` and `chore(keepalive): monthly activity commit`.
+
+## License
+
+The code (`watch.mjs` and the workflows) is released under the [MIT License](LICENSE).
+
+The generated data files (`latest.json`, `legacy.json`, `LATEST.md`) are derived from Disguise's
+public [hardware OS images](https://help.disguise.one/hardware/hardware-os-images) and
+[legacy products](https://www.disguise.one/en/products/legacy-products) pages. That content,
+including quoted release notes, belongs to Disguise and is not covered by the MIT License.
+"Disguise" and its product names are trademarks of Disguise.
+
+This project is not affiliated with or endorsed by Disguise. Always check the official pages
+before reimaging hardware.
