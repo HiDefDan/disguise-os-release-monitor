@@ -37,7 +37,7 @@ jobs:
           git config user.email "os-watch@users.noreply.github.com"
           git add latest.json LATEST.md
           if [ -f legacy.json ]; then git add legacy.json; fi
-          git diff --cached --quiet || { git commit -m "chore(data): update latest OS images"; git push; }
+          git diff --cached --quiet || { git commit -m "chore(data): update watched state"; git push; }
       # The legacy products page is secondary: OS alerts and state are handled above even if it
       # failed, then the run is marked failed here so the problem is still noticed.
       - name: Report legacy page problem

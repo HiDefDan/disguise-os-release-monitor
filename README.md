@@ -71,4 +71,4 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 `type(scope): summary`, for example `feat: track every listed image` or `fix(latest): read h3 headings`.
 `feat` means a minor release, `fix` a patch, and `!` after the type (or a `BREAKING CHANGE:` footer)
 a major one. `docs`, `ci`, `chore` and `refactor` need no release on their own. The workflows'
-own commits are `chore(data): update latest OS images` and `chore(keepalive): monthly activity commit`.
+own commits are `chore(data): update watched state` and `chore(keepalive): monthly activity commit`.

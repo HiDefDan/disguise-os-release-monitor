@@ -22,6 +22,8 @@ not releases, and are not versioned.
 
 ### Changed
 - Commit messages, including the workflows' automated commits, follow Conventional Commits.
+- The watcher's state commit is now `chore(data): update watched state`, since it can cover
+  OS images, the legacy list or both.
 
 ## [2.1.1] - 2026-10-30
 
