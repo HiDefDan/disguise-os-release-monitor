@@ -32,9 +32,9 @@ Disguise has no notification service for OS updates. This repo fills that gap.
   of Support) raise an issue and a push in that server type's thread. Committed as
   `compatibility.json`.
 - If the page can't be fetched or contains no ISO links, the run **fails** (red X, plus GitHub's
-  failed-workflow email), so a broken scraper never looks like "nothing new". If only the legacy products or compatibility page fails, OS
-  alerts still go out and state is still committed, using the last known data for that page, and
-  the run is then marked failed. Reading dates is
+  failed-workflow email), so a broken scraper never looks like "nothing new". If only the legacy
+  products or compatibility page fails, OS alerts still go out and state is still committed,
+  using the last known data for that page, and the run is then marked failed. Reading dates is
   best effort: if the page wording changes, alerts still go out, just without the date.
 - `LATEST.md` is regenerated each run: the newest image per platform with release date, Windows
   and Designer versions and a download link, plus a collapsible list of every image. It has no
