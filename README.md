@@ -76,6 +76,24 @@ If a push fails (for example a wrong token), the issue and state commit still go
 run is marked failed, so you get GitHub's failure email. Without the secrets, pushes are skipped
 with a warning.
 
+### Letting other people follow (per server type)
+
+Anyone can follow just the server types they care about, with nothing to share and no way for
+them to post anything. Each server type has its own page and **Atom feed** on GitHub Pages, at
+`https://hidefdan.github.io/disguise-os-release-monitor/`, e.g. `gx3p.html` and `gx3p.xml`
+(IDs in the table above). Each change adds one feed entry with a stable ID, so readers only
+notify on genuinely new entries: a new or re-released OS image (including re-releases of older
+versions), a Designer compatibility change or a legacy-list change. `all.xml` has everything.
+
+To follow a server type in the Notify! app, use **Follow Any Feed** and paste the server type's
+page address; the page links its feed. Any other feed reader works too.
+
+The entries are kept in `history.json`; the first run seeds it with each server type's current
+image. The pages have no timestamps, so they change only when their server type does.
+
+**One-time setup:** in the repo go to **Settings → Pages**, set **Source** to *Deploy from a
+branch*, branch `main`, folder `/docs`, and save.
+
 ### GitHub issues
 
 Every change is also opened as an issue, the permanent record. To get those on your phone too:

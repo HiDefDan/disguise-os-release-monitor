@@ -6,7 +6,8 @@
 // Writes changes.md, issue-title.txt and pushes.json (for notify.mjs) only when something differs
 // from the committed state.
 // Exits non-zero if the OS page can't be read or has no ISOs.
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 const PAGE = process.env.PAGE_URL || 'https://help.disguise.one/hardware/hardware-os-images';
 const LEGACY_PAGE = process.env.LEGACY_URL || 'https://www.disguise.one/en/products/legacy-products';
@@ -258,6 +259,7 @@ const cell = v => (v || '').replace(/\|/g, '\\|');
 const link = pl => sections[pl] ? `[${cell(name(pl))}](${PAGE}#${sections[pl].id})` : cell(pl);
 const byDate = (a, b) => (b.date ? dateValue(b.date) : 0) - (a.date ? dateValue(a.date) : 0) || name(a.platform).localeCompare(name(b.platform));
 const newest = Object.values(best).map(k => images[k]).sort(byDate);
+const SITE_URL = `https://${(process.env.GITHUB_REPOSITORY || 'HiDefDan/disguise-os-release-monitor').split('/').map((x, i) => i ? x : `${x.toLowerCase()}.github.io`).join('/')}/`;
 const status = `https://github.com/${process.env.GITHUB_REPOSITORY || 'HiDefDan/disguise-os-release-monitor'}/actions/workflows/watch.yml`;
 const md = [
   '# Latest Disguise OS images',
@@ -267,6 +269,8 @@ const md = [
   '> [!NOTE]',
   '> Generated automatically from the Disguise hardware OS images page and checked every 6 hours.',
   '> Newest release first. Always confirm against the official page before reimaging a server.',
+  '',
+  `Follow your server types: [per-server-type pages and feeds](${SITE_URL}) (paste a page address into a feed reader such as Notify!'s Follow Any Feed).`,
   '',
   `Jump to: ${[compat && '[Designer compatibility by model](#designer-compatibility-by-model)', legacy && '[Legacy products](#legacy-products)', '[All images](#all-images)'].filter(Boolean).join(' · ')}`,
   '',
@@ -336,3 +340,135 @@ const md = [
   '',
 ].join('\n');
 writeFileSync('LATEST.md', md);
+
+// docs/: a GitHub Pages site with one page per server type, for people who watch a page for
+// changes instead of getting pushes. Each page holds only that server type's data and has no
+// timestamps, so it changes only when that server type does.
+const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const slug = pl => pl.toLowerCase().replace(/_/g, '-');
+const PHASES = { 'current production': '🟢', 'end of production': '🟡', 'end of support': '🟠', 'end of life': '🔴' };
+const STYLE = `:root{--bg:#fff;--fg:#1b1f24;--muted:#5b636e;--line:#d8dee4;--card:#f6f8fa;--accent:#0b62d6}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--fg:#e6edf3;--muted:#9aa4af;--line:#30363d;--card:#161b22;--accent:#4c9bff}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:960px;margin:0 auto;padding:24px 16px 48px}a{color:var(--accent)}h1{margin:.2em 0 .1em;font-size:1.9rem}
+h2{margin:1.8em 0 .5em;font-size:1.15rem}.muted{color:var(--muted)}.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 16px;margin:0}dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.92rem}th,td{text-align:left;vertical-align:top;padding:6px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600}code{font-size:.9em;overflow-wrap:anywhere}footer{margin-top:40px;font-size:.85rem;color:var(--muted)}`;
+const pageHtml = (title, body, feed) => `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)}</title>
+<link rel="alternate" type="application/atom+xml" title="${esc(title)}" href="${esc(feed)}">
+<style>${STYLE}</style>
+</head>
+<body>
+<main>
+${body}
+<footer>
+<p>Unofficial and not affiliated with or endorsed by Disguise. Generated from Disguise's public
+<a href="${esc(PAGE)}">hardware OS images</a>, <a href="${esc(COMPAT_PAGE)}">product compatibility</a> and
+<a href="${esc(LEGACY_PAGE)}">legacy products</a> pages. Always check the official pages before reimaging hardware.</p>
+</footer>
+</main>
+</body>
+</html>
+`;
+const released = img => img.date ? `${img.kind === 're-released' ? '🔁 Re-released' : 'Released'} ${esc(img.date)}${img.reason ? ` <span class="muted">${esc(img.reason)}</span>` : ''}` : '—';
+const compatFor = pl => Object.keys(compat ?? {}).filter(p => platformFor(p) === pl);
+const compatTable = products => products.length ? `<div class="scroll"><table>
+<tr><th>Model</th><th>Lifecycle</th><th>First Designer</th><th>Latest Designer</th><th>Runs latest Designer?</th><th>OS → Designer</th></tr>
+${products.map(p => { const v = compat[p]; return `<tr><td><b>${esc(p)}</b></td><td>${PHASES[v.phase.toLowerCase()] ?? ''} ${esc(v.phase)}</td><td>${esc(v.designerFrom)}</td><td>${esc(v.designerLatest)}</td><td>${esc(v.canLoadLatest)}</td><td>${v.os.map(esc).join('<br>') || '—'}</td></tr>`; }).join('\n')}
+</table></div>` : '<p class="muted">No entry on the product compatibility page.</p>';
+
+// history.json: every change ever seen, one entry each, with a stable id. The Atom feeds are built
+// from it, so feed readers (and Notify!'s "Follow Any Feed") only see genuinely new entries.
+const SITE = SITE_URL;
+const isoDay = d => { const v = dateValue(d); return `${Math.floor(v / 10000)}-${String(Math.floor(v / 100) % 100).padStart(2, '0')}-${String(v % 100).padStart(2, '0')}T00:00:00Z`; };
+const hash = v => createHash('sha256').update(v).digest('hex').slice(0, 12);
+const now = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
+const osEntry = (k, updated, seeding = false) => {
+  const i = images[k], newestNow = best[i.platform] === k;
+  return { id: `os/${i.platform}/${i.file}`, platform: i.platform, updated,
+    title: `${name(i.platform)}: ${i.folder} ${i.kind || (!seeding && known?.[k] ? 're-released' : 'OS image')}${newestNow ? '' : ' (older version)'}`,
+    text: [i.file, i.info, i.windows && `Windows: ${i.windows}`, i.designer && `Designer: ${i.designer}`].filter(Boolean).join('\n'), url: i.url };
+};
+let history = existsSync('history.json') ? JSON.parse(readFileSync('history.json', 'utf8')) : null;
+if (!history) {
+  // First run: seed with the current newest image per server type, dated from the page.
+  history = Object.values(best).map(k => osEntry(k, images[k].date ? isoDay(images[k].date) : now, true));
+  console.log(`No history.json, seeding ${history.length} feed entries`);
+}
+const seen = new Set(history.map(e => e.id));
+const add = e => { if (!seen.has(e.id)) { seen.add(e.id); history.push(e); } };
+for (const k of changed) add(osEntry(k, now));
+for (const x of compatChanges) add({ id: `compat/${x.product}/${hash(x.what)}`, platform: platformFor(x.product) ?? null, updated: now,
+  title: `${x.product}: compatibility update`, text: x.what, url: COMPAT_PAGE });
+for (const x of legacyPushes) add({ id: `legacy/${x.product}/${hash(x.what)}`, platform: platformOf[x.product] ?? null, updated: now,
+  title: `Disguise legacy list: ${x.product}`, text: x.what, url: LEGACY_PAGE });
+history.sort((a, b) => b.updated.localeCompare(a.updated) || a.id.localeCompare(b.id));
+writeFileSync('history.json', JSON.stringify(history, null, 1) + '\n');
+
+const atom = (file, title, entries) => {
+  const top = entries.slice(0, 50);
+  return `<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>${esc(title)}</title>
+<id>${esc(SITE + file)}</id>
+<link rel="self" href="${esc(SITE + file)}"/>
+<link rel="alternate" href="${esc(SITE + file.replace(/\.xml$/, '.html').replace(/^all\.html$/, ''))}"/>
+<updated>${top[0]?.updated ?? '2026-01-01T00:00:00Z'}</updated>
+<author><name>disguise-os-release-monitor (unofficial)</name></author>
+${top.map(e => `<entry>
+<id>tag:${new URL(SITE).host},2026:${esc(e.id)}</id>
+<title>${esc(e.title)}</title>
+<updated>${e.updated}</updated>
+<link href="${esc(e.url)}"/>
+<content type="text">${esc(e.text)}</content>
+</entry>`).join('\n')}
+</feed>
+`;
+};
+
+mkdirSync('docs', { recursive: true });
+writeFileSync('docs/.nojekyll', '');
+for (const pl of Object.keys(best)) {
+  const img = images[best[pl]], l = legacyOf[pl];
+  const all = keys.filter(k => images[k].platform === pl).map(k => images[k]).sort((a, b) => cmp(b.r, a.r));
+  const legacyNote = l ? `<p>${l.all ? '🟥 Discontinued (no longer sold)' : '🟧 Partly discontinued'}: ${l.products.map(p => `${esc(p)} ${esc(legacy[p].discontinued)}${legacy[p].successor ? ` → ${esc(legacy[p].successor)}` : ''}`).join(', ')}.
+Discontinued means no longer sold, not that OS builds have stopped.</p>` : '';
+  writeFileSync(`docs/${slug(pl)}.xml`, atom(`${slug(pl)}.xml`, `${name(pl)} · Disguise OS images (unofficial)`, history.filter(e => e.platform === pl)));
+  writeFileSync(`docs/${slug(pl)}.html`, pageHtml(`${name(pl)} · Disguise OS images`, `<p><a href="./">All server types</a> · <a href="${slug(pl)}.xml">Feed for ${esc(name(pl))}</a></p>
+<h1>${esc(name(pl))}</h1>
+${img.models && modelKey(img.models) !== modelKey(name(pl)) ? `<p class="muted">Models: ${esc(img.models)}</p>` : ''}
+${legacyNote}
+<h2>Latest OS image</h2>
+<div class="card"><dl>
+<dt>Version</dt><dd><b>${esc(img.folder)}</b></dd>
+<dt>File</dt><dd><a href="${esc(img.url)}"><code>${esc(img.file)}</code></a></dd>
+<dt>Released</dt><dd>${released(img)}</dd>
+<dt>Windows</dt><dd>${esc(img.windows) || '—'}</dd>
+<dt>Designer</dt><dd>${esc(img.designer) || '—'}</dd>
+</dl></div>
+<h2>Designer compatibility</h2>
+${compatTable(compatFor(pl))}
+<h2>All OS images</h2>
+<div class="scroll"><table>
+<tr><th>Version</th><th>File</th><th>Released</th></tr>
+${all.map(i => `<tr><td>${esc(i.folder)}</td><td><a href="${esc(i.url)}"><code>${esc(i.file)}</code></a></td><td>${released(i)}</td></tr>`).join('\n')}
+</table></div>
+<p><a href="${esc(PAGE)}#${esc(sections[pl]?.id ?? '')}">Official ${esc(name(pl))} OS page</a></p>`, `${slug(pl)}.xml`));
+}
+writeFileSync('docs/all.xml', atom('all.xml', 'Disguise OS images, all server types (unofficial)', history));
+writeFileSync('docs/index.html', pageHtml('Disguise OS images by server type', `<h1>Disguise OS images by server type</h1>
+<p>Each server type has its own page and feed. A feed gets one entry per change for that server
+type: a new or re-released OS image, a Designer compatibility change, or a legacy-list change.
+To get alerts for your servers, add their page address to a feed reader (each page links its
+feed). <a href="all.xml">The all-server-types feed</a> gets every change.</p>
+<div class="scroll"><table>
+<tr><th>Server type</th><th>Latest OS</th><th>Released</th><th>Lifecycle</th></tr>
+${newest.map(img => { const phases = [...new Set(compatFor(img.platform).map(p => compat[p].phase))];
+  return `<tr><td><a href="${slug(img.platform)}.html"><b>${esc(name(img.platform))}</b></a></td><td>${esc(img.folder)}</td><td>${img.date ? `${img.kind === 're-released' ? '🔁 ' : ''}${esc(img.date)}` : '—'}</td><td>${phases.map(p => `${PHASES[p.toLowerCase()] ?? ''} ${esc(p)}`).join('<br>') || '—'}</td></tr>`; }).join('\n')}
+</table></div>`, 'all.xml'));

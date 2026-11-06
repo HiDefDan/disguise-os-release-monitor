@@ -21,6 +21,10 @@ not releases, and are not versioned.
   `NOTIFY_DEVICE_ID` and `NOTIFY_DEVICE_TOKEN` secrets; the optional `NOTIFY_PLATFORMS` variable
   limits which server types push. A failed push fails the run after the issue and state commit.
 - "Send a test push" option on manual runs.
+- Per-server-type pages and Atom feeds for GitHub Pages (`docs/`), so other people can follow
+  only the server types they want in any feed reader, including Notify!'s Follow Any Feed, with
+  nothing shared. One entry per change with a stable id, kept in `history.json`; an all-server-types
+  feed too. `LATEST.md` links to them.
 - README License section: MIT covers the code; the generated data comes from Disguise's
   public pages and isn't covered. Adds a non-affiliation note.
 
