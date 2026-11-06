@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>VX 4+ · Disguise OS images (unofficial)</title>
+<id>https://hidefdan.github.io/disguise-os-release-monitor/vx4p.xml</id>
+<link rel="self" href="https://hidefdan.github.io/disguise-os-release-monitor/vx4p.xml"/>
+<link rel="alternate" href="https://hidefdan.github.io/disguise-os-release-monitor/vx4p.html"/>
+<updated>2026-06-19T00:00:00Z</updated>
+<author><name>disguise-os-release-monitor (unofficial)</name></author>
+<entry>
+<id>tag:hidefdan.github.io,2026:os/vx4p/vx4p_25Q4_481bc46b.iso</id>
+<title>VX 4+: 25Q4 re-released</title>
+<updated>2026-06-19T00:00:00Z</updated>
+<link href="https://cfpkg.disguise.one/pkg/os-image/vx4p/25Q4/vx4p_25Q4_481bc46b.iso"/>
+<content type="text">vx4p_25Q4_481bc46b.iso
+re-released 19/Jun/2026 to resolve an occasional issue with Windows Activation
+Windows: Win 11 GAC 23H2
+Designer: r32.0 and above</content>
+</entry>
+</feed>

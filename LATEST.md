@@ -6,6 +6,8 @@
 > Generated automatically from the Disguise hardware OS images page and checked every 6 hours.
 > Newest release first. Always confirm against the official page before reimaging a server.
 
+Follow your server types: [per-server-type pages and feeds](https://hidefdan.github.io/disguise-os-release-monitor/) (paste a page address into a feed reader such as Notify!'s Follow Any Feed).
+
 Jump to: [Designer compatibility by model](#designer-compatibility-by-model) · [Legacy products](#legacy-products) · [All images](#all-images)
 
 | Platform | Version | Released | Windows | Designer | Download |

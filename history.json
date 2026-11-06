@@ -1,0 +1,130 @@
+[
+ {
+  "id": "os/plus/USB_UNI4_01.iso",
+  "platform": "plus",
+  "updated": "2026-11-06T13:11:19Z",
+  "title": "2x2plus: uni_usb4_01 OS image",
+  "text": "USB_UNI4_01.iso",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/plus/uni_usb4_01/USB_UNI4_01.iso"
+ },
+ {
+  "id": "os/EX2C_EX2_EX3P/EX2C_EX2_EX3P_25Q3_99e31e79.iso",
+  "platform": "EX2C_EX2_EX3P",
+  "updated": "2026-07-28T00:00:00Z",
+  "title": "EX 2 / EX 2C / EX 3+: 25Q3 re-released",
+  "text": "EX2C_EX2_EX3P_25Q3_99e31e79.iso\nre-released 28/Jul/2026 to enable support for newer variants of the Deltacast capture card\nWindows: Win 11 GAC 23H2\nDesigner: r32.0 and above",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/EX2C_EX2_EX3P/25Q3/EX2C_EX2_EX3P_25Q3_99e31e79.iso"
+ },
+ {
+  "id": "os/GX3P/GX3P_26Q1_e1158ced.iso",
+  "platform": "GX3P",
+  "updated": "2026-07-28T00:00:00Z",
+  "title": "GX 3+: 26Q1 re-released",
+  "text": "GX3P_26Q1_e1158ced.iso\nre-released 28/Jul/2026 to enable support for newer variants of the Deltacast capture card\nWindows: Win 11 GAC 23H2\nDesigner: r32.0 and above",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/GX3P/26Q1/GX3P_26Q1_e1158ced.iso"
+ },
+ {
+  "id": "os/vx3/vx3_25Q3_5efe9a0b.iso",
+  "platform": "vx3",
+  "updated": "2026-07-28T00:00:00Z",
+  "title": "VX 3: 25Q3 re-released",
+  "text": "vx3_25Q3_5efe9a0b.iso\nre-released 28/Jul/2026 to support a new variant of the Deltacast capture card\nWindows: Win 11 GAC 23H2\nDesigner: r32.0 and above",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/vx3/25Q3/vx3_25Q3_5efe9a0b.iso"
+ },
+ {
+  "id": "os/RX3/RX3_26Q1_79dc6ea0.iso",
+  "platform": "RX3",
+  "updated": "2026-06-24T00:00:00Z",
+  "title": "RX III: 26Q1 released",
+  "text": "RX3_26Q1_79dc6ea0.iso\nreleased 24/Jun/2026\nWindows: Win 11 GAC 23H2\nDesigner: r32.0 and above",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/RX3/26Q1/RX3_26Q1_79dc6ea0.iso"
+ },
+ {
+  "id": "os/vx4p/vx4p_25Q4_481bc46b.iso",
+  "platform": "vx4p",
+  "updated": "2026-06-19T00:00:00Z",
+  "title": "VX 4+: 25Q4 re-released",
+  "text": "vx4p_25Q4_481bc46b.iso\nre-released 19/Jun/2026 to resolve an occasional issue with Windows Activation\nWindows: Win 11 GAC 23H2\nDesigner: r32.0 and above",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/vx4p/25Q4/vx4p_25Q4_481bc46b.iso"
+ },
+ {
+  "id": "os/rx/rx_26Q1_cd6d5082.iso",
+  "platform": "rx",
+  "updated": "2026-06-05T00:00:00Z",
+  "title": "RX I / RX II: 26Q1 released",
+  "text": "rx_26Q1_cd6d5082.iso\nreleased 05/Jun/2026\nWindows: Win 11 GAC 23H2\nDesigner: r27.2 and above",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/rx/26Q1/rx_26Q1_cd6d5082.iso"
+ },
+ {
+  "id": "os/gx3/gx3_25Q2_19f7e35d.iso",
+  "platform": "gx3",
+  "updated": "2025-12-11T00:00:00Z",
+  "title": "GX 3: 25Q2 re-released",
+  "text": "gx3_25Q2_19f7e35d.iso\nre-released 11/Dec/2025 to add better error handling in the case of a failed reimage\nWindows: Win 11 GAC 23H2\nDesigner: r28.0 and above",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/gx3/25Q2/gx3_25Q2_19f7e35d.iso"
+ },
+ {
+  "id": "os/vx2p/vx2p_25Q3_ce7efeb9.iso",
+  "platform": "vx2p",
+  "updated": "2025-11-19T00:00:00Z",
+  "title": "VX 2+: 25Q3 released",
+  "text": "vx2p_25Q3_ce7efeb9.iso\nreleased 19/Nov/2025\nWindows: Win 11 GAC 23H2\nDesigner: r32.0 and above",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/vx2p/25Q3/vx2p_25Q3_ce7efeb9.iso"
+ },
+ {
+  "id": "os/vx12/vx12_25Q1_1955.iso",
+  "platform": "vx12",
+  "updated": "2025-03-14T00:00:00Z",
+  "title": "VX 1 / VX 2: 25Q1 released",
+  "text": "vx12_25Q1_1955.iso\nreleased 14/Mar/2025\nWindows: Win 10 SAC 1809\nDesigner: r27.2",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/vx12/25Q1/vx12_25Q1_1955.iso"
+ },
+ {
+  "id": "os/EX3/ex3_25Q1_1935.iso",
+  "platform": "EX3",
+  "updated": "2025-02-18T00:00:00Z",
+  "title": "EX 3: 25Q1 released",
+  "text": "ex3_25Q1_1935.iso\nreleased 18/Feb/2025\nWindows: Win 11 GAC 23H2\nDesigner: r27.2",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/EX3/25Q1/ex3_25Q1_1935.iso"
+ },
+ {
+  "id": "os/gx2c/gx2cW10_24Q1_p1497.iso",
+  "platform": "gx2c",
+  "updated": "2024-03-04T00:00:00Z",
+  "title": "GX 2C: 24Q1 released",
+  "text": "gx2cW10_24Q1_p1497.iso\nreleased 04/Mar/2024\nWindows: Win 10 SAC 1809\nDesigner: r27.2",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/gx2c/24Q1/gx2cW10_24Q1_p1497.iso"
+ },
+ {
+  "id": "os/vx4/UNI_vx4W10_24Q1_1_p1496.iso",
+  "platform": "vx4",
+  "updated": "2024-03-04T00:00:00Z",
+  "title": "VX 4: 24Q1_1 released",
+  "text": "UNI_vx4W10_24Q1_1_p1496.iso\nreleased 04/Mar/2024\nWindows: Win 10 SAC 1809\nDesigner: r27.2+",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/vx4/24Q1_1/UNI_vx4W10_24Q1_1_p1496.iso"
+ },
+ {
+  "id": "os/solo/SOLO_197_948.iso",
+  "platform": "solo",
+  "updated": "2022-05-06T00:00:00Z",
+  "title": "Solo: 197 released",
+  "text": "SOLO_197_948.iso\nreleased 06/May/2022\nWindows: Win 10 LTSB 1607\nDesigner: r14.4.7 to r29.2.2",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/solo/197/SOLO_197_948.iso"
+ },
+ {
+  "id": "os/pro/PRO_d193_p934.iso",
+  "platform": "pro",
+  "updated": "2022-04-07T00:00:00Z",
+  "title": "4x4 / 4x2: 193 released",
+  "text": "PRO_d193_p934.iso\nreleased 07/April/2022\nWindows: Win 8.1\nDesigner: r18.1.10",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/pro/193/PRO_d193_p934.iso"
+ },
+ {
+  "id": "os/2xgx/PROW11_d180_p841.iso",
+  "platform": "2xgx",
+  "updated": "2021-10-01T00:00:00Z",
+  "title": "GX 1 / GX 2 / 2x4pro: 11.0/180.841 released",
+  "text": "PROW11_d180_p841.iso\nreleased 01/Oct/2021\nWindows: Win 10 LTSB 1607\nDesigner: r14.3+",
+  "url": "https://cfpkg.disguise.one/pkg/os-image/2xgx/11.0/180.841/PROW11_d180_p841.iso"
+ }
+]

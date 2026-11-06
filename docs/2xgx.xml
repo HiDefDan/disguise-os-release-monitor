@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>GX 1 / GX 2 / 2x4pro · Disguise OS images (unofficial)</title>
+<id>https://hidefdan.github.io/disguise-os-release-monitor/2xgx.xml</id>
+<link rel="self" href="https://hidefdan.github.io/disguise-os-release-monitor/2xgx.xml"/>
+<link rel="alternate" href="https://hidefdan.github.io/disguise-os-release-monitor/2xgx.html"/>
+<updated>2021-10-01T00:00:00Z</updated>
+<author><name>disguise-os-release-monitor (unofficial)</name></author>
+<entry>
+<id>tag:hidefdan.github.io,2026:os/2xgx/PROW11_d180_p841.iso</id>
+<title>GX 1 / GX 2 / 2x4pro: 11.0/180.841 released</title>
+<updated>2021-10-01T00:00:00Z</updated>
+<link href="https://cfpkg.disguise.one/pkg/os-image/2xgx/11.0/180.841/PROW11_d180_p841.iso"/>
+<content type="text">PROW11_d180_p841.iso
+released 01/Oct/2021
+Windows: Win 10 LTSB 1607
+Designer: r14.3+</content>
+</entry>
+</feed>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>GX 3 · Disguise OS images (unofficial)</title>
+<id>https://hidefdan.github.io/disguise-os-release-monitor/gx3.xml</id>
+<link rel="self" href="https://hidefdan.github.io/disguise-os-release-monitor/gx3.xml"/>
+<link rel="alternate" href="https://hidefdan.github.io/disguise-os-release-monitor/gx3.html"/>
+<updated>2025-12-11T00:00:00Z</updated>
+<author><name>disguise-os-release-monitor (unofficial)</name></author>
+<entry>
+<id>tag:hidefdan.github.io,2026:os/gx3/gx3_25Q2_19f7e35d.iso</id>
+<title>GX 3: 25Q2 re-released</title>
+<updated>2025-12-11T00:00:00Z</updated>
+<link href="https://cfpkg.disguise.one/pkg/os-image/gx3/25Q2/gx3_25Q2_19f7e35d.iso"/>
+<content type="text">gx3_25Q2_19f7e35d.iso
+re-released 11/Dec/2025 to add better error handling in the case of a failed reimage
+Windows: Win 11 GAC 23H2
+Designer: r28.0 and above</content>
+</entry>
+</feed>

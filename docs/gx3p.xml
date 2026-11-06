@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>GX 3+ · Disguise OS images (unofficial)</title>
+<id>https://hidefdan.github.io/disguise-os-release-monitor/gx3p.xml</id>
+<link rel="self" href="https://hidefdan.github.io/disguise-os-release-monitor/gx3p.xml"/>
+<link rel="alternate" href="https://hidefdan.github.io/disguise-os-release-monitor/gx3p.html"/>
+<updated>2026-07-28T00:00:00Z</updated>
+<author><name>disguise-os-release-monitor (unofficial)</name></author>
+<entry>
+<id>tag:hidefdan.github.io,2026:os/GX3P/GX3P_26Q1_e1158ced.iso</id>
+<title>GX 3+: 26Q1 re-released</title>
+<updated>2026-07-28T00:00:00Z</updated>
+<link href="https://cfpkg.disguise.one/pkg/os-image/GX3P/26Q1/GX3P_26Q1_e1158ced.iso"/>
+<content type="text">GX3P_26Q1_e1158ced.iso
+re-released 28/Jul/2026 to enable support for newer variants of the Deltacast capture card
+Windows: Win 11 GAC 23H2
+Designer: r32.0 and above</content>
+</entry>
+</feed>
