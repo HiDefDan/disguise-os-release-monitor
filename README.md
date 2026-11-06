@@ -25,17 +25,23 @@ Disguise has no notification service for OS updates. This repo fills that gap.
   that OS builds have stopped** (RX I / RX II got 26Q1 two years after RX II was discontinued),
   so legacy platforms stay fully watched. Changes to the legacy list (a product added, removed
   or re-dated) raise an issue too. The list is committed as `legacy.json`.
+- It also reads the [product compatibility](https://help.disguise.one/hardware/product-compatibility)
+  page. `LATEST.md` has a **Designer compatibility by model** section: lifecycle phase, first and
+  latest supported Designer, whether the model runs the latest Designer, and which Designer range
+  each OS version supports, linked to the model's OS images. Changes (e.g. a model moving to End
+  of Support) raise an issue and a push in that server type's thread. Committed as
+  `compatibility.json`.
 - If the page can't be fetched or contains no ISO links, the run **fails** (red X, plus GitHub's
-  failed-workflow email), so a broken scraper never looks like "nothing new". If only the legacy products page fails, OS
-  alerts still go out and state is still committed, using the last known legacy list, and the
-  run is then marked failed. Reading dates is
+  failed-workflow email), so a broken scraper never looks like "nothing new". If only the legacy products or compatibility page fails, OS
+  alerts still go out and state is still committed, using the last known data for that page, and
+  the run is then marked failed. Reading dates is
   best effort: if the page wording changes, alerts still go out, just without the date.
 - `LATEST.md` is regenerated each run: the newest image per platform with release date, Windows
   and Designer versions and a download link, plus a collapsible list of every image. It has no
   timestamps, so it is only committed when something on the page changes.
 - Each run's log lists every image, its date as read from the page, and the newest per platform.
 
-Only the OS images and legacy products pages are requested. ISOs are never downloaded. Besides the
+Only the OS images, legacy products and product compatibility pages are requested. ISOs are never downloaded. Besides the
 built-in `GITHUB_TOKEN`, the only secrets are the optional Notify! device ID and token below.
 
 ## Setup
@@ -91,7 +97,8 @@ re-enable it under **Actions → (workflow) → Enable workflow**.
   It should open exactly one issue listing that image (with its date) and restore `latest.json`.
 - **Failure path:** run the workflow with the `page_url` input set to a page with no ISO links
   (for example `https://example.com/`). The run should fail and nothing should be committed.
-- **Locally:** `node watch.mjs` (set `PAGE_URL` to test against another page).
+- **Locally:** `node watch.mjs` (set `PAGE_URL`, `LEGACY_URL` or `COMPAT_URL` to test against
+  another page). Behind an HTTPS proxy, Node needs `NODE_USE_ENV_PROXY=1`.
 
 ## Versioning
 

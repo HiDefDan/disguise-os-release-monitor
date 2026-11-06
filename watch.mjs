@@ -1,7 +1,8 @@
 // Checks the Disguise hardware OS images page and records every listed ISO.
 // latest.json maps "<platform>/<version-folder>" to the ISO filename (which contains the build
 // hash), so new versions and silent re-releases of any image are caught, not just the newest.
-// Also reads the Disguise legacy products page (legacy.json) and cross-references it.
+// Also reads the Disguise legacy products (legacy.json) and product compatibility
+// (compatibility.json) pages and cross-references them with the OS platforms.
 // Writes changes.md, issue-title.txt and pushes.json (for notify.mjs) only when something differs
 // from the committed state.
 // Exits non-zero if the OS page can't be read or has no ISOs.
@@ -9,6 +10,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 
 const PAGE = process.env.PAGE_URL || 'https://help.disguise.one/hardware/hardware-os-images';
 const LEGACY_PAGE = process.env.LEGACY_URL || 'https://www.disguise.one/en/products/legacy-products';
+const COMPAT_PAGE = process.env.COMPAT_URL || 'https://help.disguise.one/hardware/product-compatibility';
 const UA = { 'user-agent': 'disguise-os-release-monitor (GitHub Actions)' };
 const ISO_RE = /https:\/\/cfpkg\.disguise\.one\/pkg\/os-image\/[^"'\s)<>]+\.iso/g;
 
@@ -63,6 +65,23 @@ const parseLegacy = h => {
   return out;
 };
 
+// Product compatibility page: one table, a row per product. Columns are found by header text
+// so a reordering doesn't break it; multi-line cells (the OS column) keep their lines.
+const COMPAT_COLUMNS = { product: /^product$/i, phase: /life\s*cycle/i, designerFrom: /initial/i, designerLatest: /latest designer support/i, canLoadLatest: /can i load/i, os: /^os$/i };
+const parseCompat = h => {
+  const table = h.match(/<table[\s\S]*?<\/table>/)?.[0] ?? '';
+  const cells = row => [...row.matchAll(/<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/g)].map(m => toText(m[1].replace(/<br\s*\/?>/gi, '\n')));
+  const [head, ...rows] = [...table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)].map(m => cells(m[1]));
+  const col = Object.fromEntries(Object.entries(COMPAT_COLUMNS).map(([k, re]) => [k, (head ?? []).findIndex(c => re.test(c.join(' ')))]));
+  if (Object.values(col).includes(-1)) throw new Error('compatibility table columns not recognised, page layout may have changed');
+  const out = {};
+  for (const r of rows) {
+    const v = k => r[col[k]] ?? [];
+    if (v('product').length) out[v('product').join(' ')] = { phase: v('phase').join(' '), designerFrom: v('designerFrom').join(' '), designerLatest: v('designerLatest').join(' '), canLoadLatest: v('canLoadLatest').join(' '), os: v('os') };
+  }
+  return out;
+};
+
 const res = await fetch(PAGE, { headers: UA });
 if (!res.ok) { console.error(`Fetch failed: HTTP ${res.status} for ${PAGE}`); process.exit(1); }
 const html = await res.text();
@@ -100,31 +119,43 @@ console.log(`Found ${keys.length} images on ${Object.keys(best).length} platform
 for (const [k, sec] of Object.entries(sections)) console.log(`Platform ${k}: ${sec ? `"${sec.name}" (#${sec.id})` : '(no heading found)'}`);
 for (const k of keys) console.log(`${best[images[k].platform] === k ? '*' : ' '} ${k.padEnd(26)} ${images[k].file.padEnd(36)} ${images[k].info || '(no date found)'}`);
 
+// Secondary pages (legacy products, product compatibility). A failure never blocks OS alerts:
+// the last known data is kept and source-errors.txt makes the workflow fail afterwards, so the
+// problem is still visible.
+const sourceErrors = [];
+const loadSource = async (label, url, file, parse) => {
+  const known = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
+  try {
+    const r = await fetch(url, { headers: UA });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = parse(await r.text());
+    if (!Object.keys(data).length) throw new Error('no products found, page layout may have changed');
+    return { known, data, ok: true };
+  } catch (e) {
+    sourceErrors.push(`${label}: ${e.message} (${url}). Kept the last known data.`);
+    console.error(sourceErrors.at(-1));
+    return { known, data: known, ok: false };
+  }
+};
 // "Discontinued" means no longer sold, not that OS builds have stopped, so legacy platforms
-// stay fully watched. A legacy page failure never blocks OS alerts: the last known list is kept
-// and legacy-error.txt makes the workflow fail afterwards, so the problem is still visible.
-const knownLegacy = existsSync('legacy.json') ? JSON.parse(readFileSync('legacy.json', 'utf8')) : null;
-let legacy = null, legacyError = '';
-try {
-  const r = await fetch(LEGACY_PAGE, { headers: UA });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  legacy = parseLegacy(await r.text());
-  if (!Object.keys(legacy).length) throw new Error('no products found, page layout may have changed');
-} catch (e) {
-  legacyError = `Legacy products page: ${e.message} (${LEGACY_PAGE}). Kept the last known list.`;
-  legacy = knownLegacy;
-  console.error(legacyError);
-}
+// stay fully watched.
+const legacySrc = await loadSource('Legacy products page', LEGACY_PAGE, 'legacy.json', parseLegacy);
+const compatSrc = await loadSource('Product compatibility page', COMPAT_PAGE, 'compatibility.json', parseCompat);
+const legacy = legacySrc.data, knownLegacy = legacySrc.known, compat = compatSrc.data;
 
-// Match legacy products to OS platforms by model name ("RX II" ~ "RX-II", but not "RX III").
+// Match products to OS platforms by model name ("RX II" ~ "RX-II", but not "RX III").
 const modelKey = v => v.toLowerCase().replace(/[\s_-]+/g, '');
+const modelsOf = Object.fromEntries(Object.keys(best).map(pl =>
+  [pl, [...new Set((images[best[pl]].models || name(pl)).split('/').map(modelKey).filter(Boolean))]]));
+const platformFor = product => Object.keys(best).find(pl => modelsOf[pl].includes(modelKey(product)));
 const legacyOf = {}, platformOf = {};
+for (const p of Object.keys(legacy ?? {})) if (platformFor(p)) platformOf[p] = platformFor(p);
 for (const pl of Object.keys(best)) {
-  const models = [...new Set((images[best[pl]].models || name(pl)).split('/').map(modelKey).filter(Boolean))];
-  const products = Object.keys(legacy ?? {}).filter(p => models.includes(modelKey(p)));
-  products.forEach(p => platformOf[p] = pl);
-  if (products.length) legacyOf[pl] = { products, all: products.length === models.length };
+  const products = Object.keys(platformOf).filter(p => platformOf[p] === pl);
+  if (products.length) legacyOf[pl] = { products, all: products.length === modelsOf[pl].length };
 }
+console.log(`Product compatibility (${Object.keys(compat ?? {}).length}):`);
+for (const [p, v] of Object.entries(compat ?? {})) console.log(`  ${p.padEnd(26)} ${v.phase.padEnd(18)} Designer ${v.designerFrom} to ${v.designerLatest} -> ${platformFor(p) ? name(platformFor(p)) : '(no OS image section)'}`);
 console.log(`Legacy products (${Object.keys(legacy ?? {}).length}):`);
 for (const [p, v] of Object.entries(legacy ?? {})) console.log(`  ${p.padEnd(22)} discontinued ${v.discontinued}${v.successor ? `, current generation ${v.successor}` : ''} -> ${platformOf[p] ? name(platformOf[p]) : '(no OS image section)'}`);
 
@@ -151,8 +182,8 @@ else {
 
 const legacyLines = [], legacyPushes = [];
 const legacyDesc = v => `discontinued ${v.discontinued}${v.successor ? `, current generation ${v.successor}` : ''}`;
-if (!legacyError && !knownLegacy) console.log('No previous legacy list, recording baseline');
-else if (!legacyError) {
+if (legacySrc.ok && !knownLegacy) console.log('No previous legacy list, recording baseline');
+else if (legacySrc.ok) {
   for (const [p, v] of Object.entries(legacy)) {
     const o = knownLegacy[p];
     const os = platformOf[p] ? ` (OS images: ${name(platformOf[p])})` : '';
@@ -163,14 +194,36 @@ else if (!legacyError) {
   legacyLines.push(...legacyPushes.map(x => `- **${x.product}**${/^(added|removed) /.test(x.what) ? ' ' : ': '}${x.what}`));
 }
 
-if (osLines.length || legacyLines.length) {
+// Compatibility changes, field by field, e.g. a product moving to End of Support.
+const COMPAT_LABELS = { phase: 'lifecycle', designerFrom: 'first Designer', designerLatest: 'latest Designer', canLoadLatest: 'can load latest Designer', os: 'OS / Designer' };
+const compatShow = v => Array.isArray(v) ? v.join('; ') : v;
+const compatChanges = [];
+if (compatSrc.ok && !compatSrc.known) console.log('No previous compatibility table, recording baseline');
+else if (compatSrc.ok) {
+  for (const [p, v] of Object.entries(compat)) {
+    const o = compatSrc.known[p];
+    if (!o) { compatChanges.push({ product: p, what: `added: ${v.phase}, Designer ${v.designerFrom} to ${v.designerLatest}` }); continue; }
+    const diffs = Object.keys(COMPAT_LABELS).filter(k => compatShow(o[k]) !== compatShow(v[k]))
+      .map(k => `${COMPAT_LABELS[k]} ${compatShow(v[k])} (was ${compatShow(o[k])})`);
+    if (diffs.length) compatChanges.push({ product: p, what: diffs.join('; ') });
+  }
+  for (const p of Object.keys(compatSrc.known)) if (!(p in compat)) compatChanges.push({ product: p, what: 'removed from the compatibility table' });
+}
+const compatLines = compatChanges.map(x => {
+  const pl = platformFor(x.product);
+  return `- **${x.product}**${pl && modelKey(name(pl)) !== modelKey(x.product) ? ` (${name(pl)})` : ''}: ${x.what}`;
+});
+
+if (osLines.length || legacyLines.length || compatLines.length) {
   writeFileSync('changes.md', [
     ...(osLines.length ? ['### OS images', '', ...osLines, '', PAGE, ''] : []),
     ...(legacyLines.length ? ['### Legacy products', '', ...legacyLines, '', LEGACY_PAGE, ''] : []),
+    ...(compatLines.length ? ['### Product compatibility', '', ...compatLines, '', COMPAT_PAGE, ''] : []),
   ].join('\n'));
-  const title = osLines.length ? `New Disguise OS image${legacyLines.length ? ' + legacy list change' : ''}` : 'Disguise legacy products list changed';
+  const others = [legacyLines.length && 'legacy list', compatLines.length && 'product compatibility'].filter(Boolean);
+  const title = osLines.length ? `New Disguise OS image${others.length ? ` + ${others.join(' + ')} change` : ''}` : `Disguise ${others.join(' + ')} changed`;
   writeFileSync('issue-title.txt', `${title} (${new Date().toISOString().slice(0, 10)})`);
-  console.log(`Changes:\n${[...osLines, ...legacyLines].join('\n')}`);
+  console.log(`Changes:\n${[...osLines, ...legacyLines, ...compatLines].join('\n')}`);
 
   // One push per server type (stacked per type on the phone by groupType), one per legacy change.
   const pushes = [];
@@ -187,11 +240,17 @@ if (osLines.length || legacyLines.length) {
     });
   }
   for (const x of legacyPushes) pushes.push({ platform: platformOf[x.product] ?? null, groupType: 'legacy', title: `Disguise legacy list: ${x.product}`, text: x.what });
+  // Compatibility changes go into the matching server type's thread.
+  for (const x of compatChanges) {
+    const pl = platformFor(x.product) ?? null;
+    pushes.push({ platform: pl, groupType: pl ? `os-${pl}` : 'compatibility', title: `${x.product}: compatibility update`, text: x.what });
+  }
   writeFileSync('pushes.json', JSON.stringify(pushes, null, 1) + '\n');
 } else console.log('No changes');
 writeFileSync('latest.json', JSON.stringify(Object.fromEntries(keys.map(k => [k, images[k].file])), null, 1) + '\n');
-if (legacyError) writeFileSync('legacy-error.txt', legacyError + '\n');
-else writeFileSync('legacy.json', JSON.stringify(legacy, null, 1) + '\n');
+if (sourceErrors.length) writeFileSync('source-errors.txt', sourceErrors.join('\n') + '\n');
+if (legacySrc.ok) writeFileSync('legacy.json', JSON.stringify(legacy, null, 1) + '\n');
+if (compatSrc.ok) writeFileSync('compatibility.json', JSON.stringify(compat, null, 1) + '\n');
 
 // LATEST.md: a rendered summary of the newest image per platform. No timestamps, so it only
 // changes (and gets committed) when the page does.
@@ -209,6 +268,8 @@ const md = [
   '> Generated automatically from the Disguise hardware OS images page and checked every 6 hours.',
   '> Newest release first. Always confirm against the official page before reimaging a server.',
   '',
+  `Jump to: ${[compat && '[Designer compatibility by model](#designer-compatibility-by-model)', legacy && '[Legacy products](#legacy-products)', '[All images](#all-images)'].filter(Boolean).join(' · ')}`,
+  '',
   '| Platform | Version | Released | Windows | Designer | Download |',
   '|:--|:--|:--|:--|:--|:--|',
   ...newest.map(img => {
@@ -223,6 +284,25 @@ const md = [
   '🔁 = re-released under the same version label with a new build hash. Delete older copies.<br>',
   '🟥 / 🟧 = all / some of the platform\'s models are on Disguise\'s legacy products list (no longer sold).',
   '',
+  ...(compat ? (() => {
+    const PHASE = { 'current production': '🟢', 'end of production': '🟡', 'end of support': '🟠', 'end of life': '🔴' };
+    const order = [...newest.flatMap(img => Object.keys(compat).filter(p => platformFor(p) === img.platform)), ...Object.keys(compat).filter(p => !platformFor(p))];
+    return [
+      '## Designer compatibility by model',
+      '',
+      '| Model | Lifecycle | OS images | First Designer | Latest Designer | Runs latest Designer? | OS → Designer |',
+      '|:--|:--|:--|:--|:--|:--|:--|',
+      ...order.map(p => {
+        const v = compat[p], pl = platformFor(p);
+        return `| **${cell(p)}** | ${PHASE[v.phase.toLowerCase()] ?? ''} ${cell(v.phase)} | ${pl ? link(pl) : '—'} | ${cell(v.designerFrom)} | ${cell(v.designerLatest)} | ${cell(v.canLoadLatest)} | ${v.os.map(cell).join('<br>') || '—'} |`;
+      }),
+      '',
+      '🟢 Current Production · 🟡 End of Production · 🟠 End of Support · 🔴 End of Life',
+      '',
+      `Source: [help.disguise.one product compatibility](${COMPAT_PAGE})`,
+      '',
+    ];
+  })() : []),
   ...(legacy ? [
     '## Legacy products',
     '',
@@ -240,6 +320,8 @@ const md = [
     `Source: [disguise.one legacy products](${LEGACY_PAGE})`,
     '',
   ] : []),
+  '## All images',
+  '',
   '<details>',
   `<summary><b>All ${keys.length} listed images</b></summary>`,
   '',

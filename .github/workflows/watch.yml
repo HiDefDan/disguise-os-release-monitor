@@ -47,14 +47,14 @@ jobs:
           git config user.name  "os-watch"
           git config user.email "os-watch@users.noreply.github.com"
           git add latest.json LATEST.md
-          if [ -f legacy.json ]; then git add legacy.json; fi
+          for f in legacy.json compatibility.json; do if [ -f "$f" ]; then git add "$f"; fi; done
           git diff --cached --quiet || { git commit -m "chore(data): update watched state"; git push; }
-      # The legacy products page and push delivery are secondary: the issue and state are handled
-      # above even if either failed, then the run is marked failed here so the problem is noticed.
+      # The legacy and compatibility pages and push delivery are secondary: the issue and state
+      # are handled above even if any of them failed, then the run is marked failed here.
       - name: Report problems
-        if: hashFiles('legacy-error.txt', 'notify-error.txt') != ''
+        if: hashFiles('source-errors.txt', 'notify-error.txt') != ''
         run: |
-          for f in legacy-error.txt notify-error.txt; do
+          for f in source-errors.txt notify-error.txt; do
             if [ -f "$f" ]; then echo "::error::$(cat "$f")"; fi
           done
           exit 1

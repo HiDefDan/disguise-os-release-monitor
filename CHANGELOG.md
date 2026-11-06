@@ -12,6 +12,10 @@ not releases, and are not versioned.
 ## [Unreleased]
 
 ### Added
+- Cross-reference with the Disguise product compatibility page (`compatibility.json`). `LATEST.md`
+  gains a "Designer compatibility by model" section: lifecycle phase, first and latest supported
+  Designer, whether the model runs the latest Designer, and the Designer range for each OS
+  version. Changes raise an issue and push into the matching server type's thread.
 - Push notifications per server type through the Notify! iOS app (`notify.mjs`): one push per
   changed platform, stacked per platform on the phone, plus one per legacy-list change. Uses the
   `NOTIFY_DEVICE_ID` and `NOTIFY_DEVICE_TOKEN` secrets; the optional `NOTIFY_PLATFORMS` variable
@@ -19,6 +23,10 @@ not releases, and are not versioned.
 - "Send a test push" option on manual runs.
 - README License section: MIT covers the code; the generated data comes from Disguise's
   public pages and isn't covered. Adds a non-affiliation note.
+
+### Changed
+- Secondary page failures are now reported in `source-errors.txt` (was `legacy-error.txt`), covering
+  both the legacy and compatibility pages.
 
 ## [2.2.0] - 2026-10-31
 
