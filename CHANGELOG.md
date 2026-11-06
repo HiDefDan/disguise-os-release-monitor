@@ -12,6 +12,11 @@ not releases, and are not versioned.
 ## [Unreleased]
 
 ### Added
+- Push notifications per server type through the Notify! iOS app (`notify.mjs`): one push per
+  changed platform, stacked per platform on the phone, plus one per legacy-list change. Uses the
+  `NOTIFY_DEVICE_ID` and `NOTIFY_DEVICE_TOKEN` secrets; the optional `NOTIFY_PLATFORMS` variable
+  limits which server types push. A failed push fails the run after the issue and state commit.
+- "Send a test push" option on manual runs.
 - README License section: MIT covers the code; the generated data comes from Disguise's
   public pages and isn't covered. Adds a non-affiliation note.
 

@@ -2,7 +2,8 @@
 // latest.json maps "<platform>/<version-folder>" to the ISO filename (which contains the build
 // hash), so new versions and silent re-releases of any image are caught, not just the newest.
 // Also reads the Disguise legacy products page (legacy.json) and cross-references it.
-// Writes changes.md and issue-title.txt only when something differs from the committed state.
+// Writes changes.md, issue-title.txt and pushes.json (for notify.mjs) only when something differs
+// from the committed state.
 // Exits non-zero if the OS page can't be read or has no ISOs.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 
@@ -132,7 +133,7 @@ if (known && !Object.keys(known).some(k => k.includes('/'))) {
   console.log('latest.json is in the old one-image-per-platform format, recording a new baseline');
   known = null;
 }
-let osLines = [];
+let osLines = [], changed = [];
 if (!known) console.log('No previous state, recording baseline');
 else {
   const line = k => {
@@ -142,22 +143,24 @@ else {
     const tags = [best[platform] === k && 'newest for platform', legacyOf[platform] && (legacyOf[platform].all ? 'discontinued platform' : 'partly discontinued platform')].filter(Boolean);
     return `- **${k}**${tags.length ? ` (${tags.join(', ')})` : ''}: \`${file}\` - ${what}${info ? `\n  - ${info}` : ''}`;
   };
-  const changed = keys.filter(k => known[k] !== images[k].file).sort((a, b) => (best[images[b].platform] === b) - (best[images[a].platform] === a));
+  changed = keys.filter(k => known[k] !== images[k].file).sort((a, b) => (best[images[b].platform] === b) - (best[images[a].platform] === a));
   const gone = Object.keys(known).filter(k => !(k in images));
   if (gone.length) console.log('No longer listed:', gone.join(', '));
   osLines = changed.map(line);
 }
 
-const legacyLines = [];
+const legacyLines = [], legacyPushes = [];
 const legacyDesc = v => `discontinued ${v.discontinued}${v.successor ? `, current generation ${v.successor}` : ''}`;
 if (!legacyError && !knownLegacy) console.log('No previous legacy list, recording baseline');
 else if (!legacyError) {
   for (const [p, v] of Object.entries(legacy)) {
     const o = knownLegacy[p];
-    if (!o) legacyLines.push(`- **${p}** added to the legacy list: ${legacyDesc(v)}${platformOf[p] ? ` (OS images: ${name(platformOf[p])})` : ''}`);
-    else if (o.discontinued !== v.discontinued || o.successor !== v.successor) legacyLines.push(`- **${p}**: ${legacyDesc(v)} (was ${legacyDesc(o)})`);
+    const os = platformOf[p] ? ` (OS images: ${name(platformOf[p])})` : '';
+    if (!o) legacyPushes.push({ product: p, what: `added to the legacy list: ${legacyDesc(v)}${os}` });
+    else if (o.discontinued !== v.discontinued || o.successor !== v.successor) legacyPushes.push({ product: p, what: `${legacyDesc(v)} (was ${legacyDesc(o)})` });
   }
-  for (const p of Object.keys(knownLegacy)) if (!(p in legacy)) legacyLines.push(`- **${p}** removed from the legacy list`);
+  for (const p of Object.keys(knownLegacy)) if (!(p in legacy)) legacyPushes.push({ product: p, what: 'removed from the legacy list' });
+  legacyLines.push(...legacyPushes.map(x => `- **${x.product}**${/^(added|removed) /.test(x.what) ? ' ' : ': '}${x.what}`));
 }
 
 if (osLines.length || legacyLines.length) {
@@ -168,6 +171,23 @@ if (osLines.length || legacyLines.length) {
   const title = osLines.length ? `New Disguise OS image${legacyLines.length ? ' + legacy list change' : ''}` : 'Disguise legacy products list changed';
   writeFileSync('issue-title.txt', `${title} (${new Date().toISOString().slice(0, 10)})`);
   console.log(`Changes:\n${[...osLines, ...legacyLines].join('\n')}`);
+
+  // One push per server type (stacked per type on the phone by groupType), one per legacy change.
+  const pushes = [];
+  for (const pl of [...new Set(changed.map(k => images[k].platform))]) {
+    const ks = changed.filter(k => images[k].platform === pl), l = legacyOf[pl];
+    const what = k => known[k] ? `${images[k].folder} re-released` : `new OS image ${images[k].folder}`;
+    pushes.push({
+      platform: pl, groupType: `os-${pl}`,
+      title: `${name(pl)}: ${ks.length === 1 ? what(ks[0]) : `${ks.length} OS image changes`}`,
+      text: [
+        ...ks.map(k => `${images[k].file}${best[pl] === k ? ' (newest)' : ''}${images[k].info ? `\n${images[k].info}` : ''}`),
+        l ? (l.all ? 'Platform discontinued (no longer sold)' : 'Platform partly discontinued') : '',
+      ].filter(Boolean).join('\n\n'),
+    });
+  }
+  for (const x of legacyPushes) pushes.push({ platform: platformOf[x.product] ?? null, groupType: 'legacy', title: `Disguise legacy list: ${x.product}`, text: x.what });
+  writeFileSync('pushes.json', JSON.stringify(pushes, null, 1) + '\n');
 } else console.log('No changes');
 writeFileSync('latest.json', JSON.stringify(Object.fromEntries(keys.map(k => [k, images[k].file])), null, 1) + '\n');
 if (legacyError) writeFileSync('legacy-error.txt', legacyError + '\n');

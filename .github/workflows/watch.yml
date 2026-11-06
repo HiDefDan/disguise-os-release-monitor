@@ -8,6 +8,10 @@ on:
         description: 'Override page URL (testing only, leave blank)'
         required: false
         default: ''
+      test_push:
+        description: 'Send a test push to the Notify! app'
+        type: boolean
+        default: false
 permissions:
   contents: write
   issues: write
@@ -31,6 +35,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh issue create --title "$(cat issue-title.txt)" --body-file changes.md
+      - name: Send push notifications
+        env:
+          NOTIFY_DEVICE_ID: ${{ secrets.NOTIFY_DEVICE_ID }}
+          NOTIFY_DEVICE_TOKEN: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          NOTIFY_PLATFORMS: ${{ vars.NOTIFY_PLATFORMS }}
+          TEST_PUSH: ${{ inputs.test_push }}
+        run: node notify.mjs
       - name: Commit state
         run: |
           git config user.name  "os-watch"
@@ -38,10 +49,12 @@ jobs:
           git add latest.json LATEST.md
           if [ -f legacy.json ]; then git add legacy.json; fi
           git diff --cached --quiet || { git commit -m "chore(data): update watched state"; git push; }
-      # The legacy products page is secondary: OS alerts and state are handled above even if it
-      # failed, then the run is marked failed here so the problem is still noticed.
-      - name: Report legacy page problem
-        if: hashFiles('legacy-error.txt') != ''
+      # The legacy products page and push delivery are secondary: the issue and state are handled
+      # above even if either failed, then the run is marked failed here so the problem is noticed.
+      - name: Report problems
+        if: hashFiles('legacy-error.txt', 'notify-error.txt') != ''
         run: |
-          echo "::error::$(cat legacy-error.txt)"
+          for f in legacy-error.txt notify-error.txt; do
+            if [ -f "$f" ]; then echo "::error::$(cat "$f")"; fi
+          done
           exit 1

@@ -35,15 +35,48 @@ Disguise has no notification service for OS updates. This repo fills that gap.
   timestamps, so it is only committed when something on the page changes.
 - Each run's log lists every image, its date as read from the page, and the newest per platform.
 
-Only that one page is requested. ISOs are never downloaded. Only the built-in `GITHUB_TOKEN`
-is used. No secrets are needed.
+Only the OS images and legacy products pages are requested. ISOs are never downloaded. Besides the
+built-in `GITHUB_TOKEN`, the only secrets are the optional Notify! device ID and token below.
 
 ## Setup
+
+### Push notifications per server type (Notify! app)
+
+Each changed server type gets its own push, stacked in its own thread on your phone, e.g.
+"GX 3+: 26Q1 re-released" with the build and the reason underneath. Legacy-list changes push too.
+
+1. Install [Notify! – Web & Script Notifier](https://apps.apple.com/gb/app/notify-web-script-notifier/id6748288936)
+   and open Settings to find your **Device ID** and **token**.
+2. In this repo go to **Settings → Secrets and variables → Actions** and add two repository
+   secrets: `NOTIFY_DEVICE_ID` and `NOTIFY_DEVICE_TOKEN`.
+3. Optional: to hear about some server types only, add a repository **variable** (Variables tab)
+   called `NOTIFY_PLATFORMS`, e.g. `GX3P, vx4p, RX3`. Leave it unset for all of them. The IDs
+   are the platform folder names:
+
+   | ID | Server type | ID | Server type |
+   |:--|:--|:--|:--|
+   | `GX3P` | GX 3+ | `vx4p` | VX 4+ |
+   | `EX2C_EX2_EX3P` | EX 2 / EX 2C / EX 3+ | `vx2p` | VX 2+ |
+   | `RX3` | RX III | `vx3` | VX 3 |
+   | `rx` | RX I / RX II | `vx4` | VX 4 |
+   | `gx3` | GX 3 | `vx12` | VX 1 / VX 2 |
+   | `gx2c` | GX 2C | `EX3` | EX 3 |
+   | `2xgx` | GX 1 / GX 2 / 2x4pro | `solo` | Solo |
+   | `pro` | 4x4 / 4x2 | `plus` | 2x2plus |
+
+4. Run **Actions → disguise-os-watch → Run workflow** with **Send a test push** ticked.
+
+If a push fails (for example a wrong token), the issue and state commit still go through and the
+run is marked failed, so you get GitHub's failure email. Without the secrets, pushes are skipped
+with a warning.
+
+### GitHub issues
+
+Every change is also opened as an issue, the permanent record. To get those on your phone too:
 
 1. Install the **GitHub** iOS app and sign in.
 2. On this repo choose **Watch → Custom → Issues** (or All activity).
 3. Enable push notifications in the app.
-4. Run the workflow once from **Actions → disguise-os-watch → Run workflow** to record the baseline.
 
 ## Keepalive
 
