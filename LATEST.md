@@ -6,6 +6,8 @@
 > Generated automatically from the Disguise hardware OS images page and checked every 6 hours.
 > Newest release first. Always confirm against the official page before reimaging a server.
 
+Jump to: [Designer compatibility by model](#designer-compatibility-by-model) · [Legacy products](#legacy-products) · [All images](#all-images)
+
 | Platform | Version | Released | Windows | Designer | Download |
 |:--|:--|:--|:--|:--|:--|
 | **[EX 2 / EX 2C / EX 3+](https://help.disguise.one/hardware/hardware-os-images#ex-2--ex-2c--ex-3-os)** | `25Q3` | 🔁 28/Jul/2026<br><sub>to enable support for newer variants of the Deltacast capture card</sub> | Win 11 GAC 23H2 | r32.0 and above | [⬇️ `EX2C_EX2_EX3P_25Q3_99e31e79.iso`](https://cfpkg.disguise.one/pkg/os-image/EX2C_EX2_EX3P/25Q3/EX2C_EX2_EX3P_25Q3_99e31e79.iso) |
@@ -27,6 +29,41 @@
 
 🔁 = re-released under the same version label with a new build hash. Delete older copies.<br>
 🟥 / 🟧 = all / some of the platform's models are on Disguise's legacy products list (no longer sold).
+
+## Designer compatibility by model
+
+| Model | Lifecycle | OS images | First Designer | Latest Designer | Runs latest Designer? | OS → Designer |
+|:--|:--|:--|:--|:--|:--|:--|
+| **EX 2** | 🟡 End of Production | [EX 2 / EX 2C / EX 3+](https://help.disguise.one/hardware/hardware-os-images#ex-2--ex-2c--ex-3-os) | r28 | Latest version | Yes | Current OS |
+| **EX 2C** | 🟢 Current Production | [EX 2 / EX 2C / EX 3+](https://help.disguise.one/hardware/hardware-os-images#ex-2--ex-2c--ex-3-os) | r28 or r32.2 if HDMI 2.0 input and/or additional 12G SDI input is required | Latest version | Yes | 24Q2 - r28.0 to r31.1.3<br>25Q3+ - r32.2+ |
+| **EX 3+** | 🟢 Current Production | [EX 2 / EX 2C / EX 3+](https://help.disguise.one/hardware/hardware-os-images#ex-2--ex-2c--ex-3-os) | r28 or r32.2 if HDMI 2.0 input and/or additional 12G SDI input is required | Latest version | Yes | 24Q2 - r28.0 to r31.1.3<br>25Q3+ - r32.2+ |
+| **GX 3+** | 🟢 Current Production | [GX 3+](https://help.disguise.one/hardware/hardware-os-images#gx-3-os) | r32 | Latest version | Yes | 26Q1 |
+| **VX 3** | 🟢 Current Production | [VX 3](https://help.disguise.one/hardware/hardware-os-images#vx-3-os) | r27.2 | Latest version | Yes | 24Q1+ - r27.2+ |
+| **RX III** | 🟡 End of Production | [RX III](https://help.disguise.one/hardware/hardware-os-images#rx-iii-os) | r27.5 | Latest version | Yes - only if used with a Disguise media server that can load the latest Designer software version | Current OS |
+| **VX 4+** | 🟢 Current Production | [VX 4+](https://help.disguise.one/hardware/hardware-os-images#vx-4-os) | r21.4 | Latest version | Yes | 197D.1048 - r21.4 to r21.4.9<br>204A.1048 - r22 to r26.5.2<br>24Q2 - r27 to r27.1.3<br>24Q2_1+ - r27.2+ |
+| **RX** | 🟡 End of Production | [RX I / RX II](https://help.disguise.one/hardware/hardware-os-images#rx-i--rx-ii-os) | r18 | Latest version | Yes - only if used with a Disguise media server that can load the latest Designer software version | Current OS |
+| **RX II** | 🟡 End of Production | [RX I / RX II](https://help.disguise.one/hardware/hardware-os-images#rx-i--rx-ii-os) | r19 | Latest version | Yes - only if used with a Disguise media server that can load the latest Designer software version | Current OS |
+| **GX 3** | 🟡 End of Production | [GX 3](https://help.disguise.one/hardware/hardware-os-images#gx-3-os-1) | r22 | Latest version | Yes | 201F.1063 - r22 to r26.5.2<br>24Q1 - r27 to r27.10.3<br>25Q1+ - r28+ |
+| **VX 2+** | 🟢 Current Production | [VX 2+](https://help.disguise.one/hardware/hardware-os-images#vx-2-os) | r26.4 | Latest version | Yes | 23Q4 - r26.4 to r27.1.3<br>24Q1+ - r27.2+ |
+| **VX 1** | 🟠 End of Support | [VX 1 / VX 2](https://help.disguise.one/hardware/hardware-os-images#vx-1--vx-2-os) | r17.4 or r20.1 if Matrox capture card installed | r32.4.x | No | 187C.1048 - up to r21.4.9<br>03C.1048 - r22 to r26.5.2<br>m24Q1 - r27 to r27.1.3<br>24Q2+ - r27.2+ |
+| **VX 2** | 🟠 End of Support | [VX 1 / VX 2](https://help.disguise.one/hardware/hardware-os-images#vx-1--vx-2-os) | r17.4 or r20.1 if Matrox capture card installed | r32.4.x | No | 187C.1048 - up to r21.4.9<br>203C.1048 - r22 to r26.5.2<br>24Q1 - r27 to r27.1.3<br>24Q2+ - r27.2+ |
+| **EX 3** | 🟡 End of Production | [EX 3](https://help.disguise.one/hardware/hardware-os-images#ex-3-os) | r24.2 | Latest version | Yes | 201F.1063 - r24.2 to r26.5.2<br>25Q1+ - r27+ |
+| **GX 2C** | 🟠 End of Support | [GX 2C](https://help.disguise.one/hardware/hardware-os-images#gx-2c-os) | r15.3.1 | r32.4.x | No | 199B.947 - up to r27.1.3<br>24Q1+ - r27.2+ |
+| **VX 4** | 🟠 End of Support | [VX 4](https://help.disguise.one/hardware/hardware-os-images#vx-4-os-1) | r15.2 or r20.1 if Matrox capture card installed | r32.4.x | No | 194H.1048 - up to r21.4.9<br>202B.1048 - r22 to r26.5.2<br>24Q1 - r27 to r27.1.3<br>24Q1_1+ - r27.2+ |
+| **Solo** | 🔴 End of Life | [Solo](https://help.disguise.one/hardware/hardware-os-images#solo-os) | r14.4.7 | r29.3 | No | Current OS |
+| **4x4pro** | 🔴 End of Life | [4x4 / 4x2](https://help.disguise.one/hardware/hardware-os-images#4x4--4x2-os) | r11.3 | r18.1.15 | No | Current OS |
+| **4x2pro** | 🔴 End of Life | [4x4 / 4x2](https://help.disguise.one/hardware/hardware-os-images#4x4--4x2-os) | r11.3 | r18.1.15 | No | Current OS |
+| **2x4pro** | 🟠 End of Support | [GX 1 / GX 2 / 2x4pro](https://help.disguise.one/hardware/hardware-os-images#gx-1--gx-2--2x4pro-os) | r14.2 | r32.4.x | No | Current OS |
+| **GX 1** | 🟠 End of Support | [GX 1 / GX 2 / 2x4pro](https://help.disguise.one/hardware/hardware-os-images#gx-1--gx-2--2x4pro-os) | r14.3 | r32.4.x | No | Current OS |
+| **GX 2** | 🟠 End of Support | [GX 1 / GX 2 / 2x4pro](https://help.disguise.one/hardware/hardware-os-images#gx-1--gx-2--2x4pro-os) | r14.3 | r32.4.x | No | Current OS |
+| **2x2plus** | 🔴 End of Life | [2x2plus](https://help.disguise.one/hardware/hardware-os-images#2x2plus-os) | r12 | r18.1.15 | No | Current OS |
+| **VX 4N** | 🟠 End of Support | — | r24.1.1 | r32.4.x | No | Current OS |
+| **OmniCal Wired Kit** | 🟢 Current Production | — | r15 | Latest version | Yes | N/A |
+| **OmniCal Wireless Kit (iOS)** | 🔴 End of Life | — | r15 | r19 | No | N/A |
+
+🟢 Current Production · 🟡 End of Production · 🟠 End of Support · 🔴 End of Life
+
+Source: [help.disguise.one product compatibility](https://help.disguise.one/hardware/product-compatibility)
 
 ## Legacy products
 
@@ -55,6 +92,8 @@
 | OmniCal wireless kit | 25 October 2019 | OmniCal wired kit | — | — |
 
 Source: [disguise.one legacy products](https://www.disguise.one/en/products/legacy-products)
+
+## All images
 
 <details>
 <summary><b>All 37 listed images</b></summary>

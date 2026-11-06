@@ -1,0 +1,255 @@
+{
+ "4x4pro": {
+  "phase": "End of Life",
+  "designerFrom": "r11.3",
+  "designerLatest": "r18.1.15",
+  "canLoadLatest": "No",
+  "os": [
+   "Current OS"
+  ]
+ },
+ "4x2pro": {
+  "phase": "End of Life",
+  "designerFrom": "r11.3",
+  "designerLatest": "r18.1.15",
+  "canLoadLatest": "No",
+  "os": [
+   "Current OS"
+  ]
+ },
+ "2x4pro": {
+  "phase": "End of Support",
+  "designerFrom": "r14.2",
+  "designerLatest": "r32.4.x",
+  "canLoadLatest": "No",
+  "os": [
+   "Current OS"
+  ]
+ },
+ "2x2plus": {
+  "phase": "End of Life",
+  "designerFrom": "r12",
+  "designerLatest": "r18.1.15",
+  "canLoadLatest": "No",
+  "os": [
+   "Current OS"
+  ]
+ },
+ "Solo": {
+  "phase": "End of Life",
+  "designerFrom": "r14.4.7",
+  "designerLatest": "r29.3",
+  "canLoadLatest": "No",
+  "os": [
+   "Current OS"
+  ]
+ },
+ "EX 2": {
+  "phase": "End of Production",
+  "designerFrom": "r28",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes",
+  "os": [
+   "Current OS"
+  ]
+ },
+ "EX 2C": {
+  "phase": "Current Production",
+  "designerFrom": "r28 or r32.2 if HDMI 2.0 input and/or additional 12G SDI input is required",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes",
+  "os": [
+   "24Q2 - r28.0 to r31.1.3",
+   "25Q3+ - r32.2+"
+  ]
+ },
+ "EX 3": {
+  "phase": "End of Production",
+  "designerFrom": "r24.2",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes",
+  "os": [
+   "201F.1063 - r24.2 to r26.5.2",
+   "25Q1+ - r27+"
+  ]
+ },
+ "EX 3+": {
+  "phase": "Current Production",
+  "designerFrom": "r28 or r32.2 if HDMI 2.0 input and/or additional 12G SDI input is required",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes",
+  "os": [
+   "24Q2 - r28.0 to r31.1.3",
+   "25Q3+ - r32.2+"
+  ]
+ },
+ "GX 1": {
+  "phase": "End of Support",
+  "designerFrom": "r14.3",
+  "designerLatest": "r32.4.x",
+  "canLoadLatest": "No",
+  "os": [
+   "Current OS"
+  ]
+ },
+ "GX 2": {
+  "phase": "End of Support",
+  "designerFrom": "r14.3",
+  "designerLatest": "r32.4.x",
+  "canLoadLatest": "No",
+  "os": [
+   "Current OS"
+  ]
+ },
+ "GX 2C": {
+  "phase": "End of Support",
+  "designerFrom": "r15.3.1",
+  "designerLatest": "r32.4.x",
+  "canLoadLatest": "No",
+  "os": [
+   "199B.947 - up to r27.1.3",
+   "24Q1+ - r27.2+"
+  ]
+ },
+ "GX 3": {
+  "phase": "End of Production",
+  "designerFrom": "r22",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes",
+  "os": [
+   "201F.1063 - r22 to r26.5.2",
+   "24Q1 - r27 to r27.10.3",
+   "25Q1+ - r28+"
+  ]
+ },
+ "GX 3+": {
+  "phase": "Current Production",
+  "designerFrom": "r32",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes",
+  "os": [
+   "26Q1"
+  ]
+ },
+ "VX 1": {
+  "phase": "End of Support",
+  "designerFrom": "r17.4 or r20.1 if Matrox capture card installed",
+  "designerLatest": "r32.4.x",
+  "canLoadLatest": "No",
+  "os": [
+   "187C.1048 - up to r21.4.9",
+   "03C.1048 - r22 to r26.5.2",
+   "m24Q1 - r27 to r27.1.3",
+   "24Q2+ - r27.2+"
+  ]
+ },
+ "VX 2": {
+  "phase": "End of Support",
+  "designerFrom": "r17.4 or r20.1 if Matrox capture card installed",
+  "designerLatest": "r32.4.x",
+  "canLoadLatest": "No",
+  "os": [
+   "187C.1048 - up to r21.4.9",
+   "203C.1048 - r22 to r26.5.2",
+   "24Q1 - r27 to r27.1.3",
+   "24Q2+ - r27.2+"
+  ]
+ },
+ "VX 2+": {
+  "phase": "Current Production",
+  "designerFrom": "r26.4",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes",
+  "os": [
+   "23Q4 - r26.4 to r27.1.3",
+   "24Q1+ - r27.2+"
+  ]
+ },
+ "VX 3": {
+  "phase": "Current Production",
+  "designerFrom": "r27.2",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes",
+  "os": [
+   "24Q1+ - r27.2+"
+  ]
+ },
+ "VX 4": {
+  "phase": "End of Support",
+  "designerFrom": "r15.2 or r20.1 if Matrox capture card installed",
+  "designerLatest": "r32.4.x",
+  "canLoadLatest": "No",
+  "os": [
+   "194H.1048 - up to r21.4.9",
+   "202B.1048 - r22 to r26.5.2",
+   "24Q1 - r27 to r27.1.3",
+   "24Q1_1+ - r27.2+"
+  ]
+ },
+ "VX 4N": {
+  "phase": "End of Support",
+  "designerFrom": "r24.1.1",
+  "designerLatest": "r32.4.x",
+  "canLoadLatest": "No",
+  "os": [
+   "Current OS"
+  ]
+ },
+ "VX 4+": {
+  "phase": "Current Production",
+  "designerFrom": "r21.4",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes",
+  "os": [
+   "197D.1048 - r21.4 to r21.4.9",
+   "204A.1048 - r22 to r26.5.2",
+   "24Q2 - r27 to r27.1.3",
+   "24Q2_1+ - r27.2+"
+  ]
+ },
+ "RX": {
+  "phase": "End of Production",
+  "designerFrom": "r18",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes - only if used with a Disguise media server that can load the latest Designer software version",
+  "os": [
+   "Current OS"
+  ]
+ },
+ "RX II": {
+  "phase": "End of Production",
+  "designerFrom": "r19",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes - only if used with a Disguise media server that can load the latest Designer software version",
+  "os": [
+   "Current OS"
+  ]
+ },
+ "RX III": {
+  "phase": "End of Production",
+  "designerFrom": "r27.5",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes - only if used with a Disguise media server that can load the latest Designer software version",
+  "os": [
+   "Current OS"
+  ]
+ },
+ "OmniCal Wired Kit": {
+  "phase": "Current Production",
+  "designerFrom": "r15",
+  "designerLatest": "Latest version",
+  "canLoadLatest": "Yes",
+  "os": [
+   "N/A"
+  ]
+ },
+ "OmniCal Wireless Kit (iOS)": {
+  "phase": "End of Life",
+  "designerFrom": "r15",
+  "designerLatest": "r19",
+  "canLoadLatest": "No",
+  "os": [
+   "N/A"
+  ]
+ }
+}
