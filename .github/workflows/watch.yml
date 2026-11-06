@@ -40,6 +40,7 @@ jobs:
           NOTIFY_DEVICE_ID: ${{ secrets.NOTIFY_DEVICE_ID }}
           NOTIFY_DEVICE_TOKEN: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
           NOTIFY_PLATFORMS: ${{ vars.NOTIFY_PLATFORMS }}
+          NOTIFY_GROUPS: ${{ secrets.NOTIFY_GROUPS }}
           TEST_PUSH: ${{ inputs.test_push }}
         run: node notify.mjs
       - name: Commit state

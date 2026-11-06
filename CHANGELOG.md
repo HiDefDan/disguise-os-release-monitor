@@ -21,6 +21,9 @@ not releases, and are not versioned.
   `NOTIFY_DEVICE_ID` and `NOTIFY_DEVICE_TOKEN` secrets; the optional `NOTIFY_PLATFORMS` variable
   limits which server types push. A failed push fails the run after the issue and state commit.
 - "Send a test push" option on manual runs.
+- Subscriptions for other people through Notify! groups: the `NOTIFY_GROUPS` secret maps server
+  types to groups, so each person joins only the server types they want. Server types without a
+  group are not offered.
 - README License section: MIT covers the code; the generated data comes from Disguise's
   public pages and isn't covered. Adds a non-affiliation note.
 

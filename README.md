@@ -76,6 +76,35 @@ If a push fails (for example a wrong token), the issue and state commit still go
 run is marked failed, so you get GitHub's failure email. Without the secrets, pushes are skipped
 with a warning.
 
+### Letting other people subscribe (per server type)
+
+Other people subscribe through Notify! **groups**, one group per server type you want to offer.
+Server types without a group are not offered to anyone else.
+
+1. In the Notify! app, create a group for each server type, e.g. "Disguise OS · GX 3+". Each
+   group has a **group ID** (starts `GRP`) and a **group token**.
+2. Add one repository **secret** called `NOTIFY_GROUPS` mapping server type IDs (table above) to
+   `groupID:groupToken`:
+
+   ```json
+   {"GX3P": "GRPAB123:groupTokenA", "vx4p": "GRPCD456:groupTokenB", "other": "GRPEF789:groupTokenC"}
+   ```
+
+   `other` is optional: it gets legacy-list and compatibility changes that have no server type.
+   Several server types can share one group, e.g. one group for the whole VX range.
+3. Invite people to the groups they want. Either:
+   - **share the group token** so they join in the app. Simple, but the same token also lets
+     them post to that group, so only share it with people you trust; or
+   - **add them yourself**: they send you their Device ID and token from the app's Settings,
+     and you add them to the group, so the group token never leaves you.
+4. Join the groups yourself to receive those server types: once a server type has a group, it
+   goes to that group instead of to `NOTIFY_DEVICE_ID`.
+5. Run the workflow with **Send a test push**. It goes to your device and to every group once,
+   so tell members to expect it.
+
+A wrong group token, invalid `NOTIFY_GROUPS`, or a group where no member received a push marks
+the run failed (after the issue and state commit), without printing any token.
+
 ### GitHub issues
 
 Every change is also opened as an issue, the permanent record. To get those on your phone too:
