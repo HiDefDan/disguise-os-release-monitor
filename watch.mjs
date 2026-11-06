@@ -355,13 +355,14 @@ h2{margin:1.8em 0 .5em;font-size:1.15rem}.muted{color:var(--muted)}.card{backgro
 dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 16px;margin:0}dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}
 .scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.92rem}th,td{text-align:left;vertical-align:top;padding:6px 8px;border-bottom:1px solid var(--line)}
 th{color:var(--muted);font-weight:600}code{font-size:.9em;overflow-wrap:anywhere}footer{margin-top:40px;font-size:.85rem;color:var(--muted)}`;
-const pageHtml = (title, body, feed) => `<!doctype html>
+// feeds: [href, title] pairs advertised in <head>, which is what feed discovery reads.
+const pageHtml = (title, body, feeds) => `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
-<link rel="alternate" type="application/atom+xml" title="${esc(title)}" href="${esc(feed)}">
+${feeds.map(([href, t]) => `<link rel="alternate" type="application/atom+xml" title="${esc(t)}" href="${esc(href)}">`).join('\n')}
 <style>${STYLE}</style>
 </head>
 <body>
@@ -459,7 +460,7 @@ ${compatTable(compatFor(pl))}
 <tr><th>Version</th><th>File</th><th>Released</th></tr>
 ${all.map(i => `<tr><td>${esc(i.folder)}</td><td><a href="${esc(i.url)}"><code>${esc(i.file)}</code></a></td><td>${released(i)}</td></tr>`).join('\n')}
 </table></div>
-<p><a href="${esc(PAGE)}#${esc(sections[pl]?.id ?? '')}">Official ${esc(name(pl))} OS page</a></p>`, `${slug(pl)}.xml`));
+<p><a href="${esc(PAGE)}#${esc(sections[pl]?.id ?? '')}">Official ${esc(name(pl))} OS page</a></p>`, [[`${slug(pl)}.xml`, `${name(pl)} · Disguise OS images`]]));
 }
 writeFileSync('docs/all.xml', atom('all.xml', 'Disguise OS images, all server types (unofficial)', history));
 writeFileSync('docs/index.html', pageHtml('Disguise OS images by server type', `<h1>Disguise OS images by server type</h1>
@@ -468,7 +469,7 @@ type: a new or re-released OS image, a Designer compatibility change, or a legac
 To get alerts for your servers, add their page address to a feed reader (each page links its
 feed). <a href="all.xml">The all-server-types feed</a> gets every change.</p>
 <div class="scroll"><table>
-<tr><th>Server type</th><th>Latest OS</th><th>Released</th><th>Lifecycle</th></tr>
+<tr><th>Server type</th><th>Latest OS</th><th>Released</th><th>Lifecycle</th><th>Feed</th></tr>
 ${newest.map(img => { const phases = [...new Set(compatFor(img.platform).map(p => compat[p].phase))];
-  return `<tr><td><a href="${slug(img.platform)}.html"><b>${esc(name(img.platform))}</b></a></td><td>${esc(img.folder)}</td><td>${img.date ? `${img.kind === 're-released' ? '🔁 ' : ''}${esc(img.date)}` : '—'}</td><td>${phases.map(p => `${PHASES[p.toLowerCase()] ?? ''} ${esc(p)}`).join('<br>') || '—'}</td></tr>`; }).join('\n')}
-</table></div>`, 'all.xml'));
+  return `<tr><td><a href="${slug(img.platform)}.html"><b>${esc(name(img.platform))}</b></a></td><td>${esc(img.folder)}</td><td>${img.date ? `${img.kind === 're-released' ? '🔁 ' : ''}${esc(img.date)}` : '—'}</td><td>${phases.map(p => `${PHASES[p.toLowerCase()] ?? ''} ${esc(p)}`).join('<br>') || '—'}</td><td><a href="${slug(img.platform)}.xml">${slug(img.platform)}.xml</a></td></tr>`; }).join('\n')}
+</table></div>`, [['all.xml', 'All server types · Disguise OS images'], ...newest.map(img => [`${slug(img.platform)}.xml`, `${name(img.platform)} · Disguise OS images`])]));

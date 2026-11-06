@@ -24,7 +24,8 @@ not releases, and are not versioned.
 - Per-server-type pages and Atom feeds for GitHub Pages (`docs/`), so other people can follow
   only the server types they want in any feed reader, including Notify!'s Follow Any Feed, with
   nothing shared. One entry per change with a stable id, kept in `history.json`; an all-server-types
-  feed too. `LATEST.md` links to them.
+  feed too. `LATEST.md` links to them. The index page advertises every feed, so a reader's feed
+  discovery offers each server type separately.
 - README License section: MIT covers the code; the generated data comes from Disguise's
   public pages and isn't covered. Adds a non-affiliation note.
 
