@@ -4,8 +4,15 @@
 <id>https://hidefdan.github.io/disguise-os-release-monitor/vx12.xml</id>
 <link rel="self" href="https://hidefdan.github.io/disguise-os-release-monitor/vx12.xml"/>
 <link rel="alternate" href="https://hidefdan.github.io/disguise-os-release-monitor/vx12.html"/>
-<updated>2025-03-14T00:00:00Z</updated>
+<updated>2026-11-11T19:36:08Z</updated>
 <author><name>disguise-os-release-monitor (unofficial)</name></author>
+<entry>
+<id>tag:hidefdan.github.io,2026:compat/VX 1/2f724830a12b</id>
+<title>VX 1: compatibility update</title>
+<updated>2026-11-11T19:36:08Z</updated>
+<link href="https://help.disguise.one/hardware/product-compatibility"/>
+<content type="text">OS / Designer 187C.1048 - up to r21.4.9; 203C.1048 - r22 to r26.5.2; 24Q1 - r27 to r27.1.3; 24Q2+ - r27.2+ (was 187C.1048 - up to r21.4.9; 03C.1048 - r22 to r26.5.2; m24Q1 - r27 to r27.1.3; 24Q2+ - r27.2+)</content>
+</entry>
 <entry>
 <id>tag:hidefdan.github.io,2026:os/vx12/vx12_25Q1_1955.iso</id>
 <title>VX 1 / VX 2: 25Q1 released</title>

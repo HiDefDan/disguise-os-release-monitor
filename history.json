@@ -1,5 +1,21 @@
 [
  {
+  "id": "compat/RX III/0126a9de0ead",
+  "platform": "RX3",
+  "updated": "2026-11-11T19:36:08Z",
+  "title": "RX III: compatibility update",
+  "text": "lifecycle Current Production (was End of Production)",
+  "url": "https://help.disguise.one/hardware/product-compatibility"
+ },
+ {
+  "id": "compat/VX 1/2f724830a12b",
+  "platform": "vx12",
+  "updated": "2026-11-11T19:36:08Z",
+  "title": "VX 1: compatibility update",
+  "text": "OS / Designer 187C.1048 - up to r21.4.9; 203C.1048 - r22 to r26.5.2; 24Q1 - r27 to r27.1.3; 24Q2+ - r27.2+ (was 187C.1048 - up to r21.4.9; 03C.1048 - r22 to r26.5.2; m24Q1 - r27 to r27.1.3; 24Q2+ - r27.2+)",
+  "url": "https://help.disguise.one/hardware/product-compatibility"
+ },
+ {
   "id": "os/plus/USB_UNI4_01.iso",
   "platform": "plus",
   "updated": "2026-11-06T13:11:19Z",

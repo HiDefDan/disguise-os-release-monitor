@@ -138,8 +138,8 @@
   "canLoadLatest": "No",
   "os": [
    "187C.1048 - up to r21.4.9",
-   "03C.1048 - r22 to r26.5.2",
-   "m24Q1 - r27 to r27.1.3",
+   "203C.1048 - r22 to r26.5.2",
+   "24Q1 - r27 to r27.1.3",
    "24Q2+ - r27.2+"
   ]
  },
@@ -226,7 +226,7 @@
   ]
  },
  "RX III": {
-  "phase": "End of Production",
+  "phase": "Current Production",
   "designerFrom": "r27.5",
   "designerLatest": "Latest version",
   "canLoadLatest": "Yes - only if used with a Disguise media server that can load the latest Designer software version",

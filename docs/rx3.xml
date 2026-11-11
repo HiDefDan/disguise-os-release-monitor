@@ -4,8 +4,15 @@
 <id>https://hidefdan.github.io/disguise-os-release-monitor/rx3.xml</id>
 <link rel="self" href="https://hidefdan.github.io/disguise-os-release-monitor/rx3.xml"/>
 <link rel="alternate" href="https://hidefdan.github.io/disguise-os-release-monitor/rx3.html"/>
-<updated>2026-06-24T00:00:00Z</updated>
+<updated>2026-11-11T19:36:08Z</updated>
 <author><name>disguise-os-release-monitor (unofficial)</name></author>
+<entry>
+<id>tag:hidefdan.github.io,2026:compat/RX III/0126a9de0ead</id>
+<title>RX III: compatibility update</title>
+<updated>2026-11-11T19:36:08Z</updated>
+<link href="https://help.disguise.one/hardware/product-compatibility"/>
+<content type="text">lifecycle Current Production (was End of Production)</content>
+</entry>
 <entry>
 <id>tag:hidefdan.github.io,2026:os/RX3/RX3_26Q1_79dc6ea0.iso</id>
 <title>RX III: 26Q1 released</title>
