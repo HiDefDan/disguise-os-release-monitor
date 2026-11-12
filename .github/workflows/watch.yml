@@ -34,7 +34,9 @@ jobs:
         if: hashFiles('changes.md') != ''
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh issue create --title "$(cat issue-title.txt)" --body-file changes.md
+          # Assigned to the repo owner so GitHub emails them even if the repo isn't watched.
+          ASSIGNEE: ${{ github.repository_owner }}
+        run: gh issue create --title "$(cat issue-title.txt)" --body-file changes.md --assignee "$ASSIGNEE"
       - name: Send push notifications
         env:
           NOTIFY_DEVICE_ID: ${{ secrets.NOTIFY_DEVICE_ID }}

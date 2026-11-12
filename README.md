@@ -96,7 +96,8 @@ branch*, branch `main`, folder `/docs`, and save.
 
 ### GitHub issues
 
-Every change is also opened as an issue, the permanent record. To get those on your phone too:
+Every change is also opened as an issue, the permanent record, and assigned to the repo owner,
+so GitHub emails you about it even if you stop watching the repo. To get those on your phone too:
 
 1. Install the **GitHub** iOS app and sign in.
 2. On this repo choose **Watch → Custom → Issues** (or All activity).
