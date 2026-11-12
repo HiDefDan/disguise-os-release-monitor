@@ -198,21 +198,41 @@ else if (legacySrc.ok) {
 // Compatibility changes, field by field, e.g. a product moving to End of Support.
 const COMPAT_LABELS = { phase: 'lifecycle', designerFrom: 'first Designer', designerLatest: 'latest Designer', canLoadLatest: 'can load latest Designer', os: 'OS / Designer' };
 const compatShow = v => Array.isArray(v) ? v.join('; ') : v;
+// One readable line per change. For a reworded line, show the new line and only the words that
+// changed, e.g. "203C.1048 - r22 to r26.5.2 (was 03C.1048)", so a one-character fix is easy to spot.
+const lineChange = (label, a, b) => {
+  const x = a.split(' '), y = b.split(' '), diff = y.map((w, i) => w !== x[i] ? i : -1).filter(i => i >= 0);
+  return x.length === y.length && diff.length <= 2
+    ? `${label}: ${b} (was ${diff.map(i => x[i]).join(' … ')})`
+    : `${label}: ${b} (was ${a})`;
+};
+const fieldChanges = (k, a, b) => {
+  const label = COMPAT_LABELS[k];
+  if (!Array.isArray(a) || !Array.isArray(b)) return [`${label}: ${compatShow(b)} (was ${compatShow(a)})`];
+  const gone = a.filter(l => !b.includes(l)), added = b.filter(l => !a.includes(l));
+  const paired = Math.min(gone.length, added.length);
+  return [
+    ...added.slice(0, paired).map((l, i) => lineChange(label, gone[i], l)),
+    ...added.slice(paired).map(l => `${label} added: ${l}`),
+    ...gone.slice(paired).map(l => `${label} removed: ${l}`),
+  ];
+};
 const compatChanges = [];
 if (compatSrc.ok && !compatSrc.known) console.log('No previous compatibility table, recording baseline');
 else if (compatSrc.ok) {
   for (const [p, v] of Object.entries(compat)) {
     const o = compatSrc.known[p];
-    if (!o) { compatChanges.push({ product: p, what: `added: ${v.phase}, Designer ${v.designerFrom} to ${v.designerLatest}` }); continue; }
-    const diffs = Object.keys(COMPAT_LABELS).filter(k => compatShow(o[k]) !== compatShow(v[k]))
-      .map(k => `${COMPAT_LABELS[k]} ${compatShow(v[k])} (was ${compatShow(o[k])})`);
-    if (diffs.length) compatChanges.push({ product: p, what: diffs.join('; ') });
+    if (!o) { compatChanges.push({ product: p, details: [`added: ${v.phase}, Designer ${v.designerFrom} to ${v.designerLatest}`] }); continue; }
+    const details = Object.keys(COMPAT_LABELS).filter(k => compatShow(o[k]) !== compatShow(v[k])).flatMap(k => fieldChanges(k, o[k], v[k]));
+    if (details.length) compatChanges.push({ product: p, details });
   }
-  for (const p of Object.keys(compatSrc.known)) if (!(p in compat)) compatChanges.push({ product: p, what: 'removed from the compatibility table' });
+  for (const p of Object.keys(compatSrc.known)) if (!(p in compat)) compatChanges.push({ product: p, details: ['removed from the compatibility table'] });
+  for (const x of compatChanges) x.what = x.details.join('\n');
 }
 const compatLines = compatChanges.map(x => {
   const pl = platformFor(x.product);
-  return `- **${x.product}**${pl && modelKey(name(pl)) !== modelKey(x.product) ? ` (${name(pl)})` : ''}: ${x.what}`;
+  const head = `- **${x.product}**${pl && modelKey(name(pl)) !== modelKey(x.product) ? ` (${name(pl)})` : ''}:`;
+  return x.details.length === 1 ? `${head} ${x.details[0]}` : [head, ...x.details.map(d => `  - ${d}`)].join('\n');
 });
 
 if (osLines.length || legacyLines.length || compatLines.length) {

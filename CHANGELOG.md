@@ -30,6 +30,8 @@ not releases, and are not versioned.
   public pages and isn't covered. Adds a non-affiliation note.
 
 ### Changed
+- Compatibility alerts list one change per line and, for a reworded line, show the new line with
+  only the words that changed, e.g. `203C.1048 - r22 to r26.5.2 (was 03C.1048)`.
 - Secondary page failures are now reported in `source-errors.txt` (was `legacy-error.txt`), covering
   both the legacy and compatibility pages.
 
